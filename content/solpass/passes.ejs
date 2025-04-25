@@ -1,0 +1,2921 @@
+<!---
+title: SolPasses
+description: SolPasses
+layout: dashboard
+group: solpass
+--->
+<div class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+  <div class="w-full mb-1">
+      <div class="mb-4">
+          <nav class="flex mb-5" aria-label="Breadcrumb">
+              <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                <li class="inline-flex items-center">
+                  <a href="#" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
+                    <svg class="w-5 h-5 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                    <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" aria-current="page">Passes</span>
+                  </div>
+                </li>
+                <li>
+                  <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                    <span id="pass-state" class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" aria-current="page"></span>
+                  </div>
+                </li>
+              </ol>
+          </nav>
+          <h1 id="pass-title" class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white"></h1>
+      </div>
+      <div class="sm:flex">
+          <div class="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-700">
+              <form class="lg:pr-3" action="#" method="GET">
+              <label for="passes-search" class="sr-only">Search</label>
+              <div class="relative mt-1 lg:w-64 xl:w-96">
+                  <input type="text" name="passes-search" id="passes-search" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search for passes">
+              </div>
+              </form>
+          </div>
+          <div class="flex items-center ml-auto space-x-2 sm:space-x-3">
+              <div id="tooltip-refresh-passes" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                Refresh SolPasses
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+              <button id="refreshPassButton" data-tooltip-target="tooltip-refresh-passes" data-tooltip-placement="top" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-3 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" type="button">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path style="fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke:#fff;stroke-opacity:1;stroke-miterlimit:4;" d="M 17.653125 7.65 C 15.923437 5.404687 13.03125 4.396875 10.279687 5.08125 C 7.532812 5.760937 5.446875 8.00625 4.96875 10.8 M 18 3.998437 L 18 8.001563 L 14.001563 8.001563 M 6.346875 16.35 C 8.076562 18.595312 10.96875 19.603125 13.720313 18.923437 C 16.467187 18.239062 18.553125 15.99375 19.03125 13.2 M 6 20.001562 L 6 15.998437 L 9.998437 15.998437 " transform="matrix(0.833333,0,0,0.833333,0,0)"/>
+                </svg>
+              </button>
+              <div id="new-pass-container">
+                <div id="tooltip-new-pass" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                  New SolPass
+                  <div class="tooltip-arrow" data-popper-arrow></div>
+                </div>
+                <button type="button" id="open-add-modal" data-tooltip-target="tooltip-new-pass" data-tooltip-placement="top" data-modal-target="add-pass-modal" data-modal-toggle="add-pass-modal" class="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                  <svg class="w-6 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path style=" stroke:none;fill-rule:evenodd;fill:#ffffff;fill-opacity:1;" d="M 10 0 C 11.230469 0 12.410156 0.222656 13.496094 0.628906 L 10.957031 3.167969 C 10.644531 3.125 10.324219 3.101562 10 3.101562 C 6.191406 3.101562 3.105469 6.191406 3.105469 10 C 3.105469 10.324219 3.125 10.644531 3.171875 10.957031 L 0.632812 13.496094 C 0.222656 12.410156 0 11.230469 0 10 C 0 4.476562 4.476562 0 10 0 Z M 19.371094 6.503906 C 19.777344 7.59375 20 8.769531 20 10 C 20 15.523438 15.523438 20 10 20 C 8.769531 20 7.59375 19.777344 6.503906 19.371094 L 9.042969 16.832031 C 9.355469 16.875 9.675781 16.898438 10 16.898438 C 13.808594 16.898438 16.894531 13.8125 16.894531 10 C 16.894531 9.679688 16.875 9.359375 16.828125 9.046875 Z M 19.371094 6.503906 "/>
+                    <path style=" stroke:none;fill-rule:nonzero;fill:#ffffff;fill-opacity:1;" d="M 3.441406 13.691406 L 4.90625 12.226562 C 5.226562 11.90625 5.542969 11.742188 5.851562 11.738281 C 6.164062 11.730469 6.460938 11.867188 6.742188 12.148438 C 7.03125 12.4375 7.167969 12.75 7.15625 13.085938 C 7.144531 13.421875 6.960938 13.765625 6.605469 14.121094 L 6.121094 14.605469 L 7.179688 15.664062 L 6.292969 16.546875 Z M 5.542969 14.027344 L 5.761719 13.8125 C 5.933594 13.640625 6.023438 13.492188 6.035156 13.363281 C 6.042969 13.234375 6.003906 13.125 5.910156 13.03125 C 5.820312 12.941406 5.714844 12.898438 5.589844 12.894531 C 5.46875 12.890625 5.324219 12.976562 5.15625 13.140625 L 4.90625 13.390625 Z M 10.074219 11.824219 L 9.074219 12.824219 L 9.402344 13.4375 L 8.503906 14.335938 L 6.722656 10.410156 L 7.6875 9.445312 L 11.609375 11.230469 L 10.6875 12.152344 Z M 9.269531 11.394531 L 7.933594 10.679688 L 8.648438 12.015625 Z M 10.746094 10.203125 L 11.53125 9.316406 C 11.683594 9.433594 11.824219 9.5 11.953125 9.515625 C 12.15625 9.539062 12.34375 9.46875 12.511719 9.296875 C 12.636719 9.171875 12.707031 9.046875 12.714844 8.921875 C 12.722656 8.792969 12.6875 8.691406 12.613281 8.613281 C 12.539062 8.539062 12.441406 8.507812 12.316406 8.511719 C 12.195312 8.515625 11.992188 8.613281 11.703125 8.796875 C 11.230469 9.09375 10.839844 9.253906 10.53125 9.277344 C 10.222656 9.296875 9.953125 9.199219 9.730469 8.976562 C 9.585938 8.828125 9.488281 8.648438 9.445312 8.433594 C 9.398438 8.214844 9.421875 7.988281 9.519531 7.742188 C 9.617188 7.496094 9.8125 7.226562 10.109375 6.929688 C 10.476562 6.566406 10.820312 6.355469 11.148438 6.300781 C 11.476562 6.246094 11.804688 6.347656 12.136719 6.605469 L 11.355469 7.484375 C 11.203125 7.375 11.0625 7.328125 10.933594 7.339844 C 10.804688 7.351562 10.675781 7.421875 10.554688 7.546875 C 10.449219 7.648438 10.394531 7.746094 10.386719 7.839844 C 10.378906 7.9375 10.40625 8.015625 10.46875 8.078125 C 10.515625 8.125 10.574219 8.144531 10.652344 8.136719 C 10.730469 8.132812 10.867188 8.070312 11.054688 7.949219 C 11.523438 7.644531 11.882812 7.453125 12.132812 7.371094 C 12.382812 7.292969 12.609375 7.273438 12.8125 7.324219 C 13.015625 7.375 13.191406 7.480469 13.347656 7.636719 C 13.53125 7.816406 13.648438 8.035156 13.703125 8.292969 C 13.753906 8.546875 13.730469 8.808594 13.628906 9.070312 C 13.527344 9.328125 13.339844 9.597656 13.0625 9.875 C 12.578125 10.359375 12.148438 10.601562 11.777344 10.601562 C 11.402344 10.601562 11.058594 10.46875 10.746094 10.203125 Z M 13.578125 7.375 L 14.363281 6.484375 C 14.515625 6.601562 14.65625 6.667969 14.78125 6.683594 C 14.988281 6.707031 15.175781 6.636719 15.34375 6.46875 C 15.46875 6.34375 15.535156 6.21875 15.546875 6.089844 C 15.554688 5.964844 15.519531 5.859375 15.441406 5.78125 C 15.371094 5.710938 15.269531 5.675781 15.148438 5.679688 C 15.027344 5.6875 14.820312 5.78125 14.53125 5.964844 C 14.058594 6.265625 13.671875 6.425781 13.359375 6.445312 C 13.050781 6.46875 12.785156 6.367188 12.5625 6.144531 C 12.414062 5.996094 12.320312 5.816406 12.273438 5.601562 C 12.230469 5.386719 12.253906 5.15625 12.351562 4.910156 C 12.449219 4.667969 12.644531 4.394531 12.941406 4.101562 C 13.304688 3.734375 13.652344 3.523438 13.976562 3.46875 C 14.304688 3.414062 14.632812 3.515625 14.96875 3.777344 L 14.1875 4.652344 C 14.035156 4.546875 13.894531 4.496094 13.765625 4.511719 C 13.636719 4.519531 13.507812 4.589844 13.386719 4.714844 C 13.28125 4.816406 13.226562 4.914062 13.21875 5.007812 C 13.210938 5.105469 13.238281 5.183594 13.300781 5.246094 C 13.347656 5.292969 13.40625 5.3125 13.484375 5.304688 C 13.5625 5.300781 13.699219 5.238281 13.886719 5.117188 C 14.355469 4.8125 14.714844 4.621094 14.964844 4.539062 C 15.214844 4.460938 15.441406 4.441406 15.644531 4.492188 C 15.847656 4.542969 16.023438 4.648438 16.179688 4.804688 C 16.363281 4.984375 16.480469 5.203125 16.535156 5.460938 C 16.585938 5.714844 16.5625 5.976562 16.460938 6.238281 C 16.359375 6.496094 16.171875 6.765625 15.894531 7.042969 C 15.410156 7.527344 14.980469 7.769531 14.609375 7.769531 C 14.230469 7.769531 13.890625 7.636719 13.578125 7.375 Z M 13.578125 7.375 "/>
+                  </svg>
+                </button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="flex flex-col">
+  <div class="overflow-x-auto">
+      <div class="inline-block min-w-full align-middle">
+          <div class="overflow-hidden shadow">
+              <table class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600">
+                  <thead class="bg-gray-100 dark:bg-gray-700">
+                      <tr>
+                          <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                              Name
+                          </th>
+                          <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                              Webhook URL
+                          </th>
+                          <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                              Subscriptions
+                          </th>
+                          <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                              Validity
+                          </th>
+                          <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                              Retention
+                          </th>
+                          <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                              Actions
+                          </th>
+                      </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                      <% for (let i = 0; i < passes.length; i++) { %>
+                          <% const pass = passes[i]; %>
+                      <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
+                          <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white max-w-xs">
+                              <span class="inline-flex">
+                                <% if (!pass.deactivated) { %>
+                                  <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill="green" d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z"/>
+                                  </svg>
+                                <% } else { %>
+                                  <svg class="w-6 h-6 text-red-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path fill="red" d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z"/>
+                                  </svg>
+                                <% } %>
+                                <%= pass.name %>
+                              </span>
+                          </td>
+                          <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white max-w-xs">
+                            <div class="break-words" style="text-wrap:wrap"><%= pass.url %></td></div>
+                          <td class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <div class="break-words" style="text-wrap:wrap"><%= pass.subscriptions %></td></div>
+                          <td class="p-4 text-base font-normal text-gray-900 whitespace-nowrap dark:text-white">
+                            </div><div class="p-4 break-words text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                              <div class="text-base font-semibold text-gray-900 dark:text-white">
+                                <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                  From: <span class="p-4 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <%= pass.startDate %>
+                                  </span>
+                                </div>
+                                <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                                  To: <span class="p-8 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <%= pass.endDate %>
+                                  </span>
+                                </div>
+                              </div>                              
+                            </div>
+                          </td>
+                          <td class="p-4 text-base font-normal text-gray-900 whitespace-nowrap dark:text-white">
+                            <%= pass.retentionDate %>
+                          </td>
+                          <td class="p-4 space-x-2 whitespace-nowrap">
+                            <div id="tooltip-info-pass-<%= i %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                              Info SolPass
+                              <div class="tooltip-arrow" data-popper-arrow></div>
+                            </div>
+                            <button data-tooltip-target="tooltip-info-pass-<%= i %>" data-tooltip-placement="top" type="button" data-pass="<%= JSON.stringify(pass) %>" data-drawer-toggle="drawer-info-default" aria-controls="drawer-info-default" aria-controls="drawer-info-default" data-drawer-placement="right" class="infoPassButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="20px" viewBox="1.33 1.381 20 20" version="1.1" fill="none">
+                                <path stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                              </svg>
+                              
+                              <!-- Info -->
+                            </button>
+
+                            <span class="edit-block">
+                              <div id="tooltip-edit-pass-<%= i %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                Edit SolPass
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                              </div>
+                              <button data-tooltip-target="tooltip-edit-pass-<%= i %>" data-tooltip-placement="top" type="button" data-pass="<%= JSON.stringify(pass) %>" data-drawer-toggle="drawer-edit-default" aria-controls="drawer-edit-default" aria-controls="drawer-edit-default" data-drawer-placement="right" class="editPassButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="1.33 1.381 20 20" version="1.1">
+                                  <path style="stroke:#fff;fill-rule:nonzero;fill:#fff;fill-opacity:1;" d="M 1.33 11.381 C 1.33 5.858 5.807 1.381 11.33 1.381 C 16.853 1.381 21.33 5.858 21.33 11.381 C 21.33 16.904 16.853 21.381 11.33 21.381 C 5.807 21.381 1.33 16.904 1.33 11.381 Z M 12.33 7.381 C 12.33 6.611 11.496 6.13 10.83 6.515 C 10.52 6.694 10.33 7.024 10.33 7.381 L 10.33 11.381 C 10.33 11.646 10.435 11.901 10.623 12.088 L 13.623 15.088 C 14.177 15.623 15.102 15.358 15.288 14.611 C 15.371 14.276 15.276 13.922 15.037 13.674 L 12.33 10.967 L 12.33 7.381 Z" clip-rule="evenodd"/>
+                                </svg>              
+                                <!-- Edit -->
+                              
+                              </button>
+                            </span>
+
+                            <span class="reflash-block">
+                              <div id="tooltip-reflash-pass-<%= i %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                Reactivate SolPass Resources
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                              </div>
+                              <button data-tooltip-target="tooltip-reflash-pass-<%= i %>" data-tooltip-placement="top" type="button" data-pass="<%= JSON.stringify(pass) %>" data-drawer-toggle="drawer-reflash-default" aria-controls="drawer-reflash-default" aria-controls="drawer-reflash-default" data-drawer-placement="right" class="reflashPassButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="20px" viewBox="0 0 30 30" version="1.1" fill="none">
+                                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.001,30l2.707-16.334H5L11.458,0l9.25,0.123L16.667,8H25L11.001,30z"/>
+                                </svg>
+                                
+                                <!-- Reflash Pass -->
+                              </button>   
+                            </span>
+
+                            <span class="provision-block">
+                              <div id="tooltip-provision-pass-<%= i %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                Provision SolPass Resources
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                              </div>
+                              <button data-tooltip-target="tooltip-provision-pass-<%= i %>" data-tooltip-placement="top" type="button" data-pass="<%= JSON.stringify(pass) %>" data-drawer-toggle="drawer-provision-default" aria-controls="drawer-provision-default" aria-controls="drawer-provision-default" data-drawer-placement="right" class="provisionPassButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="20px" viewBox="1.33 1.381 20 20" version="1.1" fill="none">
+                                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Zm0 0-4 4m5 0H4m1 0 4-4m1 4 4-4m-4 7v6l4-3-4-3Z"/>
+                                </svg>
+                                
+                                <!-- Provision -->
+                              </button>   
+                            </span>                         
+
+                            <span class="deprovision-block">
+                              <div id="tooltip-deprovision-pass-<%= i %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                Deprovision SolPass Resources
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                              </div>
+                              <button data-tooltip-target="tooltip-deprovision-pass-<%= i %>" data-tooltip-placement="top" type="button" data-pass="<%= JSON.stringify(pass) %>" data-drawer-toggle="drawer-deprovision-default" aria-controls="drawer-deprovision-default" aria-controls="drawer-deprovision-default" data-drawer-placement="right" class="deprovisionPassButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="21px" height="20px" viewBox="1.33 1.381 20 20" version="1.1" fill="none">
+                                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Zm0 0-4 4m5 0H4m1 0 4-4m1 4 4-4m-4 7v6l4-3-4-3Z"/>
+                                </svg>
+                                
+                                <!-- Deprovision -->
+                              </button>                                  
+                            </span>                        
+
+                            <span class="expire-block">
+                              <div id="tooltip-expire-pass-<%= i %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                Expire SolPass
+                                <div class="tooltip-arrow" data-popper-arrow></div>
+                              </div>
+                              <button data-tooltip-target="tooltip-expire-pass-<%= i %>" data-tooltip-placement="top" type="button" data-pass="<%= JSON.stringify(pass) %>" data-drawer-target="drawer-expire-default" data-drawer-show="drawer-expire-default" aria-controls="drawer-expire-default" data-drawer-placement="right" class="expirePassButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="1.33 1.381 20 20" version="1.1" fill="none">
+                                  <path style="stroke:#fff;fill-rule:nonzero;fill:#fff;fill-opacity:1;" d="M 1.33 11.381 C 1.33 5.858 5.807 1.381 11.33 1.381 C 16.853 1.381 21.33 5.858 21.33 11.381 C 21.33 16.904 16.853 21.381 11.33 21.381 C 5.807 21.381 1.33 16.904 1.33 11.381 Z M 12.33 7.381 C 12.33 6.611 11.496 6.13 10.83 6.515 C 10.52 6.694 10.33 7.024 10.33 7.381 L 10.33 11.381 C 10.33 11.646 10.435 11.901 10.623 12.088 L 13.623 15.088 C 14.177 15.623 15.102 15.358 15.288 14.611 C 15.371 14.276 15.276 13.922 15.037 13.674 L 12.33 10.967 L 12.33 7.381 Z" clip-rule="evenodd"/>
+                                </svg>              
+                                <!-- Expire -->
+                              
+                              </button>
+                            </span>
+
+                            <span class="remove-block">
+                              <div id="tooltip-remove-pass-<%= i %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                              Delete SolPass
+                              <div class="tooltip-arrow" data-popper-arrow></div>
+                              </div>
+                              <button data-tooltip-target="tooltip-remove-pass-<%= i %>" data-tooltip-placement="top" type="button" data-pass="<%= JSON.stringify(pass) %>" data-drawer-target="drawer-remove-default" data-drawer-show="drawer-remove-default" aria-controls="drawer-remove-default" data-drawer-placement="right" class="removePassButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 20 20" version="1.1">
+                                  <path style=" stroke:#fff;fill-rule:nonzero;fill:#fff;fill-opacity:1;" d="M 0 10 C 0 11.359375 0.265625 12.652344 0.800781 13.878906 C 1.332031 15.105469 2.039062 16.171875 2.921875 17.078125 C 3.800781 17.988281 4.867188 18.699219 6.121094 19.21875 C 7.375 19.738281 8.667969 20 10 20 C 11.332031 20 12.625 19.738281 13.878906 19.21875 C 15.132812 18.699219 16.199219 17.988281 17.078125 17.078125 C 17.960938 16.171875 18.667969 15.105469 19.199219 13.878906 C 19.734375 12.652344 20 11.359375 20 10 C 20 8.640625 19.734375 7.347656 19.199219 6.121094 C 18.667969 4.894531 17.960938 3.828125 17.078125 2.921875 C 16.199219 2.011719 15.140625 1.308594 13.898438 0.800781 C 12.660156 0.292969 11.359375 0.0273438 10 0 C 8.640625 0 7.347656 0.265625 6.121094 0.800781 C 4.894531 1.332031 3.828125 2.039062 2.921875 2.921875 C 2.011719 3.800781 1.308594 4.867188 0.800781 6.121094 C 0.292969 7.375 0.0273438 8.667969 0 10 Z M 2.5 10 C 2.5 8.640625 2.832031 7.386719 3.5 6.238281 C 4.167969 5.09375 5.078125 4.1875 6.238281 3.519531 C 7.398438 2.851562 8.652344 2.511719 10 2.5 C 11.347656 2.488281 12.601562 2.828125 13.761719 3.519531 C 14.921875 4.214844 15.832031 5.121094 16.5 6.238281 C 17.167969 7.359375 17.5 8.613281 17.5 10 C 17.5 11.386719 17.167969 12.648438 16.5 13.78125 C 15.832031 14.914062 14.921875 15.820312 13.761719 16.5 C 12.601562 17.179688 11.347656 17.511719 10 17.5 C 8.652344 17.488281 7.398438 17.152344 6.238281 16.5 C 5.078125 15.847656 4.167969 14.941406 3.5 13.78125 C 2.832031 12.621094 2.5 11.359375 2.5 10 Z M 6.101562 12.660156 C 6.101562 13.007812 6.21875 13.300781 6.460938 13.539062 C 6.699219 13.78125 7 13.90625 7.359375 13.921875 C 7.71875 13.933594 8.011719 13.808594 8.238281 13.539062 L 10 11.78125 L 11.761719 13.539062 C 12 13.792969 12.292969 13.921875 12.640625 13.921875 C 12.988281 13.921875 13.285156 13.792969 13.539062 13.539062 C 13.792969 13.285156 13.914062 12.992188 13.898438 12.660156 C 13.886719 12.328125 13.765625 12.035156 13.539062 11.78125 L 11.761719 10 L 13.539062 8.238281 C 13.78125 8 13.898438 7.707031 13.898438 7.359375 C 13.898438 7.011719 13.78125 6.71875 13.539062 6.480469 C 13.300781 6.238281 13 6.113281 12.640625 6.101562 C 12.28125 6.085938 11.988281 6.214844 11.761719 6.480469 L 10 8.238281 L 8.238281 6.480469 C 8 6.226562 7.707031 6.101562 7.359375 6.101562 C 7.011719 6.101562 6.714844 6.226562 6.460938 6.480469 C 6.207031 6.734375 6.085938 7.027344 6.101562 7.359375 C 6.113281 7.691406 6.234375 7.988281 6.460938 8.238281 L 8.238281 10 L 6.460938 11.78125 C 6.21875 12.019531 6.101562 12.3125 6.101562 12.660156 Z M 6.101562 12.660156 "/>
+                                </svg>
+                                  
+                                <!-- Delete -->
+                              </button>
+                            </span>
+                          </td>
+                      </tr>
+
+                      <% } %>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
+<div class="sticky bottom-0 right-0 items-center w-full p-4 bg-white border-t border-gray-200 sm:flex sm:justify-between dark:bg-gray-800 dark:border-gray-700">
+  <div class="flex items-center mb-4 sm:mb-0">
+      <a href="#" class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+      </a>
+      <a href="#" class="inline-flex justify-center p-1 mr-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+      </a>
+      <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Showing <span class="font-semibold text-gray-900 dark:text-white">
+        1-<%= passes.length > 20 ? 20 : passes.length %></span> of <span class="font-semibold text-gray-900 dark:text-white"><%= passes.length %></span></span>
+  </div>
+  <div class="flex items-center space-x-3">
+      <a href="#" class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+          <svg class="w-5 h-5 mr-1 -ml-1"" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+          Previous
+      </a>
+      <a href="#" class="inline-flex items-center justify-center flex-1 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+          Next
+          <svg class="w-5 h-5 ml-1 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+      </a>
+  </div>
+</div>
+
+<!-- Add Pass Modal -->
+<div class="fixed left-0 right-0 z-50 items-center justify-center hidden overflow-x-hidden overflow-y-auto top-4 md:inset-0 h-modal sm:h-full" id="add-pass-modal" data-modal-backdrop="static">
+  <div class="relative w-full h-full max-w-2xl px-4 md:h-auto">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+          <!-- Modal header -->
+          <div class="flex items-start justify-between p-5 border-b rounded-t dark:border-gray-700">
+              <h3 id="new-pass-label" class="text-xl font-semibold dark:text-white">
+                  New SolPass
+              </h3>
+              <button id="add-pass-close" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-700 dark:hover:text-white" data-modal-toggle="add-pass-modal">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+              </button>
+          </div>
+          <!-- Modal body -->
+          <form id="newPassForm" class="... group" novalidate>
+            <!-- Step 1 - SOLPASS -->
+            <div id="step1" class="step mstep">
+              <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+                <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">SolPass</div>
+                <div id="step1-result" class="mt-2 text-sm hidden"></div>
+                <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 60vh;">
+                  <div class="mb-4 space-y-3">  <!-- PASS NAME -->
+                    <label for="passname" class="block text-sm font-medium text-gray-700">Name</label>
+                    <div class="relative flex">
+                      <input type="text" name="passname" id="passname" class="step1 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="SolPass Name" required="" value="DUMMY" />
+                    </div>
+                  </div>
+                  <div class="mb-4 space-y-3">  <!-- PASS VALIDITY FROM -->
+                    <label for="valid-from-date" class="block text-sm font-medium text-gray-700">Pass Validity from</label>
+                    <div id="valid-from" class="relative flex">
+                      <div class="relative max-w-sm">
+                        <input id="valid-from-date" type="date" class="step1 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" required>
+                      </div>
+                      <div class="relative">
+                        <input type="time" id="valid-from-time" style="width:150px" class="step1 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" value="00:00" required />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-4 space-y-3">  <!-- PASS EXPIRY -->
+                    <label for="expire-in" class="block text-sm font-medium text-gray-700">Pass Expiry</label>
+                    <div id="expires-in" class="relative flex">
+                      <div class="relative max-w-sm">
+                        <input type="number" id="expire-in" min=1 max=36 aria-describedby="helper-text-explanation" class="step1 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="24" value="1" required />                      
+                      </div>
+                      <div class="relative max-w-sm">
+                        <select id="expire-in-units" class="step1 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200">
+                          <option value="Minutes">Minutes</option>
+                          <option value="Hours" selected>Hours</option>
+                          <option value="Days">Days</option>
+                          <option value="Weeks">Weeks</option>
+                          <option value="Months">Months</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-4 space-y-3">  <!-- MESSAGE RETENTION -->
+                    <label for="retention-units" class="block text-sm font-medium text-gray-700">Message Retention</label>
+                    <div id="message-retention" class="relative flex">
+                      <div class="relative max-w-sm">
+                        <input type="number" id="retention" min=1 max=36 aria-describedby="helper-text-explanation" class="step1 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="24" value="1" required />                      
+                      </div>
+                      <div class="relative max-w-sm">
+                        <select id="retention-units" class="step1 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200">
+                          <option value="Minutes">Minutes</option>
+                          <option value="Hours" selected>Hours</option>
+                          <option value="Days">Days</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal footer -->
+              <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700 flex justify-end sticky bottom-0">
+                <button type="button" class="nextBtn bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+              </div>
+            </div>
+            <!-- Step 2 - SOLACE CONNECTIVITY -->
+            <div id="step2" class="step mstep hidden">
+              <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+                <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Broker, Queue & Client Profile</div>
+                <div id="step2-result" class="mt-2 text-sm hidden"></div>
+                <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 60vh;">
+                  <div class="mb-4 space-y-3">  <!-- BROKER -->
+                    <label for="broker" class="block text-sm font-medium text-gray-700">Broker</label>
+                    <div class="relative flex">
+                      <input type="text" name="broker" id="broker" class="step2 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="MessageVPN" required="" onkeypress="return false;"/>
+                      <button id="brokerDropdownButton" type="button" data-dropdown-toggle="brokerDropdown" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-primary-800 text-white">Broker</button>
+                      <div id="brokerDropdown" class="hidden z-10 bg-white rounded-lg w-full shadow-md">
+                        <ul id="brokerDropdownList" class="py-2 text-gray-700"></ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-4 space-y-3">  <!-- QUEUE -->
+                    <div class="relative flex flex-col">
+                      <div class="flex flex-row">
+                        <span class="text-lg font-medium text-gray-900 mb-4 mr-2">Queue:</span>
+                          <span class="flex items-center mb-4 mr-4">
+                              <input id="createQ" name="QChoice" type="radio" value="create" checked class="step2 form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" required>
+                              <label for="createQ" class="ml-3 block text-sm font-medium text-gray-700">Create</label>
+                          </span>
+                          <span class="flex items-center mb-4">
+                              <input id="existingQ" name="QChoice" type="radio" value="useExisting" class="step2 form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                              <label for="existingQ" class="ml-3 block text-sm font-medium text-gray-700">Use Existing</label>
+                          </span>
+                        </span>
+                      </div>
+                      <div id="createQContainer" class="mb-4">
+                        <label for="cQueue" class="block text-sm font-medium text-gray-700">Queue</label>
+                        <div class="relative flex">
+                          <input type="text" name="queue" id="cQueue" mode="create" class="step2 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Queue" required="" value="DUMMY"  />
+                        </div>
+                      </div>
+                      <div id="existingQContainer" class="hidden mb-4">
+                        <label for="ueQueue" class="block text-sm font-medium text-gray-700">Queue</label>
+                        <div class="relative flex">
+                          <input type="text" name="queue" id="ueQueue" mode="useExisting" class="step2 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Queue" required=""  onkeypress="return false;"/>
+                          <button id="queueDropdownButton" type="button" data-dropdown-toggle="queueDropdown" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-primary-800 text-white">Queue</button>
+                          <div id="queueDropdown" class="step2 hidden z-10 bg-white rounded-lg w-full shadow-md">
+                            <ul id="queueDropdownList" class="py-2 text-gray-700"></ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div id="cQueueFields" class="space-y-3"> <!-- QUEUE FIELDS -->
+                    <div class="relative flex flex-col">
+                      <label for="qaccesstype" class="block text-sm font-medium text-gray-700">Access Type</label>
+                      <select id="qaccesstype" class="step2 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200">
+                        <option value="Exclusive" selected>Exclusive</option>
+                        <option value="Non-Exclusive">Non-Exclusive</option>
+                      </select>
+                    </div>
+                    <div class="relative flex flex-col">
+                      <label for="qrespectttl" class="block text-sm font-medium text-gray-700">Respect TTL</label>
+                        <input id="qrespectttl" type="checkbox" checked class="step2 peer mt-4 mb-4" checked />
+                      </label>
+                    </div>
+                    <div class="relative flex flex-col">
+                      <label for="qmaxttl" class="block text-sm font-medium text-gray-700">Max TTL</label>
+                      <input type="number" id="qmaxttl" min=0 aria-describedby="helper-text-explanation" class="step2 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="0" value="0" required />                      
+                    </div>
+                  </div>
+                  <div class="mt-4 space-y-3">  <!-- CLIENT PROFILE -->
+                    <div class="relative flex flex-col">
+                      <div class="flex flex-row">
+                        <span class="text-lg font-medium text-gray-900 mb-4 mr-2">Client Profile:</span>
+                          <span class="flex items-center mb-4 mr-4">
+                              <input id="createCP" name="CPChoice" type="radio" value="create" checked class="step2 form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" required>
+                              <label for="createCP" class="ml-3 block text-sm font-medium text-gray-700">Create</label>
+                          </span>
+                          <span class="flex items-center mb-4">
+                              <input id="existingCP" name="CPChoice" type="radio" value="useExisting" class="step2 form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                              <label for="existingCP" class="ml-3 block text-sm font-medium text-gray-700">Use Existing</label>
+                          </span>
+                        </span>
+                      </div>
+                      <div id="createCPContainer" class="mb-4">
+                        <label for="cClientProfile" class="block text-sm font-medium text-gray-700">Client Profile</label>
+                        <div class="relative flex">
+                          <input type="text" name="clientProfile" id="cClientProfile" mode="create" class="step2 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Client Profile" required="" value="DUMMY"  />
+                        </div>
+                      </div>
+                      <div id="existingCPContainer" class="hidden mb-4">
+                        <label for="ueClientProfile" class="block text-sm font-medium text-gray-700">Client Profile</label>
+                        <div class="relative flex">
+                          <input type="text" name="clientProfile" id="ueClientProfile" mode="useExisting" class="step2 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Client Profile" required=""  onkeypress="return false;"/>
+                          <button id="clientProfileDropdownButton" type="button" data-dropdown-toggle="clientProfileDropdown" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-primary-800 text-white">Client Profile</button>
+                          <div id="clientProfileDropdown" class="step2 hidden z-10 bg-white rounded-lg w-full shadow-md">
+                            <ul id="clientProfileDropdownList" class="py-2 text-gray-700"></ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal footer -->
+              <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700 flex justify-between">
+                <button type="button" class="prevBtn bg-gray-500 text-white px-4 py-2 rounded">Previous</button>
+                <button type="button" class="nextBtn bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+              </div>
+            </div>
+            <!-- Step 3 - REST DELIVERY ENDPOINT -->
+            <div id="step3" class="step mstep hidden">
+              <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+                <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">REST Delivery Point</div>
+                <div id="step3-result" class="mt-2 text-sm hidden"></div>
+                <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 60vh;">
+                  <div class="relative flex flex-col mb-2 ">  <!-- RDP NAME -->
+                    <label for="rdpname" class="block text-sm font-medium text-gray-700">RDP Name</label>
+                    <input type="text" name="rdpname" id="rdpname" class="step3 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="REST Delivery Point Name" required="" value="DUMMY"  />
+                    <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">The name of the REST Delivery Point</p>
+                  </div>
+                  <div class="relative flex flex-col mb-2">  <!-- RDP SERVICE NAME -->
+                    <label for="service" class="block text-sm font-medium text-gray-700">Service Name</label>
+                    <input type="text" name="service" id="service" class="step3 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Service Name"  />
+                    <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">The name of the service that this REST Delivery Point connects to. (informational only)</p>
+                  </div>                  
+                  <div class="relative flex flex-col mb-2">  <!-- RDP VENDOR NAME -->
+                    <label for="vendor" class="block text-sm font-medium text-gray-700">Vendor Name</label>
+                    <input type="text" name="vendor" id="vendor" class="step3 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Vendor Name"  />
+                    <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">The name of the vendor that this REST Delivery Point connects to. (informational only)</p>
+                  </div>
+                  <div class="relative flex flex-col mb-2">  <!-- SUBSCRIPTONS -->
+                    <label for="subscriptions" class="block text-sm font-medium text-gray-700">Subscriptions</label>
+                    <textarea name="subscriptions" id="subscriptions" rows="4" class="step3 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Subscriptions"></textarea>
+                    <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">List of subscrptions (comma-separated)</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal footer -->
+              <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700 flex justify-between">
+                <button type="button" class="prevBtn bg-gray-500 text-white px-4 py-2 rounded">Previous</button>
+                <button type="button" class="nextBtn bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+              </div>
+            </div>
+            <!-- Step 4 - CONSUMER -->
+            <div id="step4" class="step mstep hidden">
+              <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+                <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">RDP - REST Consumer</div>
+                <div id="step4-result" class="mt-2 text-sm hidden"></div>
+                <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 60vh;">
+                  <div class="mb-4 space-y-3">
+                    <div class="relative flex flex-col">
+                      <label for="cconsumername" class="block text-sm font-medium text-gray-700">Consumer Name</label>
+                      <input type="text" id="cconsumername" min=0 aria-describedby="helper-text-explanation" class="step4 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="REST Consumer Name" required="" value="DUMMY" />                      
+                    </div>
+                    <div class="relative flex flex-col">
+                      <label for="crequesttarget" class="block text-sm font-medium text-gray-700">HTTP Request Target</label>
+                      <input type="text" id="crequesttarget" min=0 aria-describedby="helper-text-explanation" class="step4 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="POST Request Target" required="" value="/" />    
+                      <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">The request-target string to use when sending requests (must start with '/')</p>                      
+                    </div>
+                    <div class="relative flex flex-col">
+                      <label for="crequestmethod" class="block text-sm font-medium text-gray-700">HTTP Method</label>
+                      <select id="crequestmethod" class="step4 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200">
+                        <option value="POST" selected>POST</option>
+                        <option value="PUT">PUT</option>
+                      </select>
+                    </div>
+                    <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">The HTTP method to use (POST or PUT)</p>                            
+                    <div class="relative flex flex-col">
+                      <label for="cremotehost" class="block text-sm font-medium text-gray-700">Remote Host</label>
+                      <input type="text" id="cremotehost" min=0 aria-describedby="helper-text-explanation" class="step4 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Remote Host" required="" value="localhost" />                      
+                      <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">The IP address or DNS name to which the broker is to connect to deliver messages for the REST Consumer.</p>                      
+                    </div>
+                    <div class="relative flex flex-col">
+                      <label for="crempoteport" class="block text-sm font-medium text-gray-700">Report Port</label>
+                      <input type="number" id="crempoteport" min=0 aria-describedby="helper-text-explanation" class="step4 peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Remote Port" value="443" required="" value="" />   
+                      <p id="helper-text-explanation" class="mt-2 text-xs text-gray-500 dark:text-gray-400">The port associated with the host of the REST Consumer.</p>                                         
+                    </div>
+                    <div class="relative flex flex-col">
+                      <label for="ctlsenabled" class="block text-sm font-medium text-gray-700">TLS Enabled?</label>
+                        <input id="ctlsenabled" type="checkbox" checked class="step4 peer mt-4 mb-4"  />
+                      </label>
+                    </div>
+                  </div>    
+                </div>              
+              </div>
+              <!-- Modal footer -->
+              <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700 flex justify-between">
+                <button type="button" class="prevBtn bg-gray-500 text-white px-4 py-2 rounded">Previous</button>
+                <button type="button" class="preSubmit nextBtn bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+              </div>
+            </div>  
+            <!-- Step 5 - SUMMARY -->
+            <div id="step5" class="step mstep hidden">
+              <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+                <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Summary</div>
+                <div id="step5-result" class="mt-2 text-sm hidden"></div>
+                <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 60vh;">
+                  <div class="mb-4 space-y-3">
+                    <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                      <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">SolPass</h5>
+                      <p id="info-solpass" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+                    </div>
+                    <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                      <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">Broker</h5>
+                      <p id="info-broker" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+                    </div>
+                    <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                      <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">Queue</h5>
+                      <p id="info-queue" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+                    </div>
+                    <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                      <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">Client Profile</h5>
+                      <p id="info-clientprofile" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+                    </div>
+                    <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                      <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">REST Delivery Point</h5>
+                      <p id="info-rdp" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+                    </div>
+                    <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                      <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">RDP Queue Binding</h5>
+                      <p id="info-rdpqueuebinding" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+                    </div>
+                    <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                      <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">RDP REST Consumer</h5>
+                      <p id="info-rdpconsumer" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+                    </div>
+                  </div>    
+                </div>              
+              </div>
+              <!-- Modal footer -->
+              <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700 flex justify-between">
+                <button type="button" class="prevBtn bg-gray-500 text-white px-4 py-2 rounded">Previous</button>
+                <button type="button" class="submitBtn bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
+              </div>
+            </div>     
+            <!-- Step 6 - EXECUTION -->
+            <div id="step6" class="step mstep hidden">
+              <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+                <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Execution</div>
+                <div id="step6-result" class="mt-2 text-sm hidden"></div>
+                <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 60vh;">
+                  <div class="mb-4 space-y-3">
+                    <p> <!-- CONNECTING TO BROKER -->
+                      <div class="flex">
+                        <span id="exec-1" class="mr-2" >
+                          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                          </svg>
+                        </span>
+                        <span>Connecting to broker</span>
+                      </div>
+                      <div id="exec-1-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+                      <div id="exec-1-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+                    </p>
+                    <p> <!-- QUEUE -->
+                      <div class="flex">
+                        <span id="exec-2" class="mr-2" >
+                          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                          </svg>
+                        </span>
+                        <span id="exec-2-queue">Checking Queue</span>
+                      </div>
+                      <div id="exec-2-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+                      <div id="exec-2-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+                    </p>
+                    <p> <!-- CLIENT PROFILE -->
+                      <div class="flex">
+                        <span id="exec-3" class="mr-2" >
+                          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                          </svg>
+                        </span>
+                        <span id="exec-3-clientprofile">Checking Client Profile</span>
+                      </div>
+                      <div id="exec-3-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+                      <div id="exec-3-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+                    </p>
+                    <p> <!-- CREATE RDP -->
+                      <div class="flex">
+                        <span id="exec-4" class="mr-2" >
+                          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                          </svg>
+                        </span>
+                        <span>Creating REST Delivery Point</span>
+                      </div>
+                      <div id="exec-4-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+                      <div id="exec-4-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+                    </p>
+                    <p> <!-- CREATE RDP QUEUE BINDING -->
+                      <div class="flex">
+                        <span id="exec-5" class="mr-2" >
+                          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                          </svg>
+                        </span>
+                        <span>Creating Queue Binding</span>
+                      </div>
+                      <div id="exec-5-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+                      <div id="exec-5-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+                    </p>
+                    <p> <!-- CREATE RDP REST CONSUMER -->
+                      <div class="flex">
+                        <span id="exec-6" class="mr-2" >
+                          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                          </svg>
+                        </span>
+                        <span>Creating REST Consumer</span>
+                      </div>
+                      <div id="exec-6-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+                      <div id="exec-6-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+                    </p>
+                    <p>
+                      <div id="revert-changes" class="hidden exec-status ml-2 font-normal text-gray-700 dark:text-gray-400"></div>
+                    </p>
+                  </div>    
+                </div>              
+              </div>
+              <!-- Modal footer -->
+              <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700 flex justify-between">
+                <button type="button" class="prevBtn bg-gray-500 text-white px-4 py-2 rounded">Previous</button>
+                <button type="button" class="doneBtn bg-blue-500 text-white px-4 py-2 rounded">Done</button>
+              </div>
+            </div>            
+          </form>
+        </div>
+      </div>
+  </div>
+</div>
+
+<!-- Info Pass Modal -->
+<div id="drawer-info-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-label" class="inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Info SolPass</h5>
+  <button type="button" id="info-modal-close" data-drawer-dismiss="drawer-info-default" aria-controls="drawer-info-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+  <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+    <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">SolPass</div>
+    <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 75vh;">
+      <div class="mb-4 space-y-3">
+        <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">SolPass</h5>
+          <p id="info-solpass" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+        </div>
+        <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">Broker</h5>
+          <p id="info-broker" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+        </div>
+        <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">Queue</h5>
+          <p id="info-queue" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+        </div>
+        <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">Client Profile</h5>
+          <p id="info-clientprofile" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+        </div>
+        <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">REST Delivery Point</h5>
+          <p id="info-rdp" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+        </div>
+        <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">RDP Queue Binding</h5>
+          <p id="info-rdpqueuebinding" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+        </div>
+        <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">RDP REST Consumer</h5>
+          <p id="info-rdpconsumer" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+        </div>
+        <div class="block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+          <h5 class="mb-2 text-l font-bold tracking-tight text-primary-600 dark:text-white">Status</h5>
+          <p id="info-status" class="info-tiles font-normal text-gray-700 dark:text-gray-400"></p>
+        </div>
+      </div>    
+    </div>              
+  </div>
+  <div class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700 flex justify-center">
+    <button id="infoCloseButton" type="button" class="bg-blue-500 text-white px-4 py-2 rounded">Done</button>
+  </div>
+
+</div>
+
+<!-- Provision Pass Modal -->
+<div id="drawer-provision-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-label" class="inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">provision SolPass</h5>
+  <button type="button" id="provision-modal-close" data-drawer-dismiss="drawer-provision-default" aria-controls="drawer-provision-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+  <form id="provisionPassForm" class="... group" novalidate>
+    <!-- PROVISION - SOLPASS -->
+    <input type="hidden" name="provision-pass" id="provision-pass" />
+    <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+      <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Execution</div>
+      <div id="step4-result" class="mt-2 text-sm hidden"></div>
+      <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 75vh;">
+        <div class="mb-4 space-y-3">
+          <p> <!-- CONNECTING TO BROKER -->
+            <div class="flex">
+              <span id="exec-1" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span>Connecting to broker</span>
+            </div>
+            <div id="exec-1-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-1-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- QUEUE -->
+            <div class="flex">
+              <span id="exec-2" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span id="exec-2-queue">Checking Queue</span>
+            </div>
+            <div id="exec-2-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-2-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- CLIENT PROFILE -->
+            <div class="flex">
+              <span id="exec-3" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span id="exec-3-clientprofile">Checking Client Profile</span>
+            </div>
+            <div id="exec-3-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-3-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- CREATE RDP -->
+            <div class="flex">
+              <span id="exec-4" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span>Creating REST Delivery Point</span>
+            </div>
+            <div id="exec-4-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-4-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- CREATE RDP QUEUE BINDING -->
+            <div class="flex">
+              <span id="exec-5" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span>Creating Queue Binding</span>
+            </div>
+            <div id="exec-5-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-5-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- CREATE RDP REST CONSUMER -->
+            <div class="flex">
+              <span id="exec-6" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span>Creating REST Consumer</span>
+            </div>
+            <div id="exec-6-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-6-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p>
+            <div id="revert-changes" class="hidden exec-status ml-2 font-normal text-gray-700 dark:text-gray-400"></div>
+          </p>
+        </div>    
+      </div>              
+    </div>
+    <div id="pass-result" class="mt-2 text-sm"></div>
+    <div class="bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute">
+      <button id="passProvisionButton" type="submit" class="text-white w-full justify-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" >
+          Submit
+      </button>
+      <button type="button" data-drawer-dismiss="drawer-provision-default" aria-controls="drawer-provision-default" class="inline-flex w-full justify-center text-gray-500 items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+          <svg aria-hidden="true" class="w-5 h-5 -ml-1 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Deprovision Pass Modal -->
+<div id="drawer-deprovision-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-label" class="inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Deprovision SolPass</h5>
+  <button type="button" id="deprovision-modal-close" data-drawer-dismiss="drawer-deprovision-default" aria-controls="drawer-deprovision-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+  <form id="deprovisionPassForm" class="... group" novalidate>
+    <!-- DEPROVISION - SOLPASS -->
+    <input type="hidden" name="deprovision-pass" id="deprovision-pass" />
+    <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+      <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Execution</div>
+      <div id="step4-result" class="mt-2 text-sm hidden"></div>
+      <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 75vh;">
+        <div class="mb-4 space-y-3">
+          <p> <!-- CONNECTING TO BROKER -->
+            <div class="flex">
+              <span id="exec-1" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span>Connecting to broker</span>
+            </div>
+            <div id="exec-1-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-1-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- QUEUE -->
+            <div class="flex">
+              <span id="exec-2" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span id="exec-2-queue">Checking Queue</span>
+            </div>
+            <div id="exec-2-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-2-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- CLIENT PROFILE -->
+            <div class="flex">
+              <span id="exec-3" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span id="exec-3-clientprofile">Checking Client Profile</span>
+            </div>
+            <div id="exec-3-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-3-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- DELETE RDP -->
+            <div class="flex">
+              <span id="exec-4" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span>Deleting REST Delivery Point</span>
+            </div>
+            <div id="exec-4-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-4-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- DELETE RDP QUEUE BINDING -->
+            <div class="flex">
+              <span id="exec-5" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span>Deleting Queue Binding</span>
+            </div>
+            <div id="exec-5-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-5-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p> <!-- DELETE RDP REST CONSUMER -->
+            <div class="flex">
+              <span id="exec-6" class="mr-2" >
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.529 9.988a2.502 2.502 0 1 1 5 .191A2.441 2.441 0 0 1 12 12.582V14m-.01 3.008H12M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+              </span>
+              <span>Deleting REST Consumer</span>
+            </div>
+            <div id="exec-6-success" class="hidden exec-status ml-2 font-normal text-green-700 dark:text-green-400"></div>
+            <div id="exec-6-error" class="hidden exec-status ml-2 font-normal text-red-700 dark:text-red-400"></div>
+          </p>
+          <p>
+            <div id="revert-changes" class="hidden exec-status ml-2 font-normal text-gray-700 dark:text-gray-400"></div>
+          </p>
+        </div>    
+      </div>              
+    </div>
+    <div id="pass-result" class="mt-2 text-sm"></div>
+    <div class="bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute">
+      <button id="passProvisionButton" type="submit" class="text-white w-full justify-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-primary-800" >
+          Delets SolPass
+      </button>
+      <button type="button" data-drawer-dismiss="drawer-deprovision-default" aria-controls="drawer-deprovision-default" class="inline-flex w-full justify-center text-gray-500 items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+          <svg aria-hidden="true" class="w-5 h-5 -ml-1 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          Cancel
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Edit Pass Modal -->
+<div id="drawer-edit-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-label" class="inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Edit SolPass</h5>
+  <button type="button" id="edit-modal-close" data-drawer-dismiss="drawer-edit-default" aria-controls="drawer-edit-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+  <form id="editPassForm" class="... group" novalidate>
+      <!-- EDIT - SOLPASS -->
+      <input type="hidden" name="edit-pass" id="edit-pass" />
+      <div class="p-6 space-y-6" style="min-height:480px;height:auto;overflow: auto;">
+        <div class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">SolPass</div>
+        <div id="edit-result" class="mt-2 text-sm hidden"></div>
+        <div class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" style="overflow: auto;height: 60vh;">
+          <div class="mb-4 space-y-3">  <!-- PASS NAME -->
+            <label for="edit-pass-name" class="block text-sm font-medium text-gray-700">Name</label>
+            <div class="relative flex">
+              <input type="text" name="edit-pass-name" id="edit-pass-name" aria-describedby="helper-text-explanation" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="SolPass Name" required="" value="" disabled />
+            </div>
+            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              <span class="font-bold">DISABLED:</span> Pass name cannot be changed!
+            </p>
+          </div>
+          <div class="mb-4 space-y-3">  <!-- PASS VALIDITY FROM -->
+            <label for="edit-valid-from-date" class="block text-sm font-medium text-gray-700">Pass Validity from</label>
+            <div id="edit-valid-from" class="relative flex">
+              <div class="relative max-w-sm">
+                <input id="edit-valid-from-date" type="date" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" required disabled>
+              </div>
+              <div class="relative">
+                <input type="time" id="edit-valid-from-time" style="width:150px" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" value="00:00" required disabled/>
+              </div>
+            </div>
+            <p id="edit-valid-from-hint" class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              <span class="font-bold">DISABLED:</span> Pass start time cannot be changed!
+            </p>
+          </div>
+          <div class="mb-4 space-y-3">  <!-- PASS EXPIRY -->
+            <label for="edit-expire-in" class="block text-sm font-medium text-gray-700">Pass Expiry</label>
+            <div id="edit-expires-in" class="relative flex">
+              <div class="relative max-w-sm">
+                <input type="number" id="edit-expire-in" min=1 max=36 aria-describedby="helper-text-explanation" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="24" value="1" required />                      
+              </div>
+              <div class="relative max-w-sm">
+                <select id="edit-expire-in-units" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200">
+                  <option value="Minutes">Minutes</option>
+                  <option value="Hours" selected>Hours</option>
+                  <option value="Days">Days</option>
+                  <option value="Weeks">Weeks</option>
+                  <option value="Months">Months</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="mb-4 space-y-3">  <!-- MESSAGE RETENTION -->
+            <label for="edit-retention-units" class="block text-sm font-medium text-gray-700">Message Retention</label>
+            <div id="edit-message-retention" class="relative flex">
+              <div class="relative max-w-sm">
+                <input type="number" id="edit-retention" min=1 max=36 aria-describedby="helper-text-explanation" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="24" value="1" required />                      
+              </div>
+              <div class="relative max-w-sm">
+                <select id="edit-retention-units" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200">
+                  <option value="Minutes">Minutes</option>
+                  <option value="Hours" selected>Hours</option>
+                  <option value="Days">Days</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="pass-result" class="mt-2 text-sm"></div>
+      <div class="bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute">
+        <button id="passEditButton" type="submit" class="text-white w-full justify-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" >
+            Submit
+        </button>
+        <button type="button" data-drawer-dismiss="drawer-edit-default" aria-controls="drawer-edit-default" class="inline-flex w-full justify-center text-gray-500 items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+            <svg aria-hidden="true" class="w-5 h-5 -ml-1 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            Cancel
+        </button>
+    </div>
+  </form>
+</div>
+
+<!-- Remove Pass Modal -->
+<div id="drawer-remove-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-label" class="inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Delete SolPass</h5>
+  <button type="button" id="remove-modal-close" data-drawer-dismiss="drawer-remove-default" aria-controls="drawer-remove-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+  <svg class="w-10 h-10 mt-8 mb-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <h3 class="mb-6 text-lg text-gray-500 dark:text-gray-400">Are you sure you want to delete this SolPass?</h3>
+
+  <div id="remove-pass-data" class="hidden"></div>
+
+  <span id="delete-created-resources">
+    <div class="mb-5 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">Delete associated resources:</div>
+    <div class="key-value-flex mb-10 dark:text-white">
+      <div class="key">Delete Client Profile</div>
+      <div class="value"><input id="deletecp" type="checkbox" /></div>
+    </div>
+    <div class="key-value-flex mb-10 dark:text-white">
+      <div class="key">Delete Queue</div>
+      <div class="value"><input id="deleteq" type="checkbox" /></div>
+    </div>
+  </span>
+
+  <button id="passDeleteButton" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-900">
+      Yes, I'm sure
+  </button>
+  <a href="#" class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-drawer-hide="drawer-remove-default">
+      No, cancel
+  </a>
+  <div id="delete-created-resources-hint" class="mt-8">
+    <div class="block p-6 bg-primary-600 border border-gray-200 rounded-lg shadow">
+      <p class="font-normal text-white">NOTE: RDP will be deleted, only the provisioned broker resources will be deleted as selected.</p>
+    </div>    
+  </div>
+</div>
+
+<!-- Expire Pass Modal -->
+<div id="drawer-expire-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-label" class="inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Expire SolPass</h5>
+  <button type="button" id="expire-modal-close" data-drawer-dismiss="drawer-expire-default" aria-controls="drawer-expire-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+  <svg class="w-10 h-10 mt-8 mb-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <h3 class="mb-6 text-lg text-gray-500 dark:text-gray-400">Are you sure you want to expire this SolPass?</h3>
+
+  <div id="expire-pass-data" class="hidden"></div>
+
+  <span id="expire-created-resources">
+    <div class="mb-5 text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">Delete associated resources:</div>
+    <div id="check-expire-cp" class="key-value-flex mb-10 dark:text-white">
+      <div class="key">Delete Client Profile</div>
+      <div class="value"><input id="exp_deletecp" type="checkbox" /></div>
+    </div>
+    <div id="check-expire-q" class="key-value-flex mb-10 dark:text-white">
+      <div class="key">Delete Queue</div>
+      <div class="value"><input id="exp_deleteq" type="checkbox" /></div>
+    </div>
+    <div id="check-expire-rdp" class="key-value-flex mb-10 dark:text-white">
+      <div class="key">Delete REST Delivery Point</div>
+      <div class="value"><input id="exp_deleterdp" type="checkbox" /></div>
+    </div>
+  </span>
+
+  <button id="passExpireButton" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-900">
+      Yes, I'm sure
+  </button>
+  <a href="#" class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-drawer-hide="drawer-expire-default">
+      No, cancel
+  </a>
+</div>
+
+<!-- Reflash Pass Modal -->
+<div id="drawer-reflash-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-label" class="inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Reactivate SolPass</h5>
+  <button type="button" id="reflash-modal-close" data-drawer-dismiss="drawer-reflash-default" aria-controls="drawer-reflash-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+  <svg class="w-10 h-10 mt-8 mb-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <h3 class="mb-6 text-lg text-gray-500 dark:text-gray-400">Are you sure you want to reactivate this expired SolPass?</h3>
+
+  <div id="reflash-pass-data" class="hidden"></div>
+
+  <button id="passReflashButton" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-900">
+      Yes, I'm sure
+  </button>
+  <a href="#" class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-drawer-hide="drawer-reflash-default">
+      No, cancel
+  </a>
+</div>
+
+ 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.steps@1.1.2/dist/jquery-steps.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+<script>
+var removeDrawer = null;
+var expireDrawer = null;
+var editDrawer = null;
+var infoDrawer = null;
+var provisionDrawer = null;
+var deprovisionDrawer = null;
+var reflashDrawer = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Started...');
+  var group = window.location.pathname.split('/').pop();
+  group = group[0].toUpperCase() + group.substring(1, group.length);
+  document.getElementById('pass-state').innerHTML = group;
+  document.getElementById('pass-title').innerHTML = `${group} SolPasses`;
+
+  const resources = {
+    brokers: undefined,
+    clientProfiles: undefined,
+    queues: undefined,
+
+    // step1 - pass info
+    step1: {
+      passName: undefined,
+      validFromDate: undefined,
+      validFromTime: undefined,
+      expireIn: 1,
+      expireInUnits: "Minutes",
+      retention: 1,
+      retentionUnits: "Hours"
+    },
+
+    // step2 - solace connectivity
+    step2: {
+      currentBroker: undefined,
+      cpMode: 'create',
+      currentClientProfile: undefined,
+      qMode: 'create',
+      currentQueue: undefined,
+      accessType: undefined,
+      respectTTL: false,
+      maxTTL: 0
+
+    },
+    
+    // step3 - rest delivery point
+    step3: {
+      rdpName: undefined,
+      serviceName: undefined,
+      vendorName: undefined,
+      sMode: 'useExisting',
+      subscriptions: undefined
+    },
+
+    // step4 - rest consumer info
+    step4: {
+      consumerName: undefined,
+      requestMethod: 'POST',
+      requestTarget: undefined,
+      remoteHost: undefined,
+      remotePort: undefined,
+      tlsEnabled: false
+    },
+
+    // objects
+    objs: {
+      queue: undefined,
+      clientProfile: undefined,
+      rdp: undefined,
+      rdpQueueBinding: undefined,
+      rdpRestConsumer: undefined
+    }
+  }
+  
+
+  function showError(elName, message) {
+    console.log(message);
+    const result = document.getElementById(elName);
+    result.classList.remove("text-green-500");
+    result.classList.add("text-red-500");
+    result.innerHTML = `<p>${message}</p>`;
+    result.classList.remove("hidden");
+  }
+  
+  function resetError(elName) {
+    const result = document.getElementById(elName);
+    result.classList.remove("text-green-500");
+    result.classList.remove("text-red-500");
+    result.innerHTML = '';
+    result.classList.add("hidden");
+  }
+  
+  function showResult(elName, message) {
+    const result = document.getElementById(elName);
+    result.classList.add("text-green-500");
+    result.classList.remove("text-red-500");
+    result.innerText = message;
+    result.classList.remove("hidden");
+  }
+  
+  function resetResult(elName) {
+    const result = document.getElementById(elName);
+    result.classList.remove("text-green-500");
+    result.classList.remove("text-red-500");
+    result.classList.remove("hidden");
+    result.innerText = "";
+  }
+
+  document.getElementById('refreshPassButton').addEventListener('click', () => {
+    window.location.reload();
+  });  
+
+  const options = {
+    placement: 'right',
+    backdrop: true,
+    bodyScrolling: false,
+    edge: false,
+    edgeOffset: '',
+    backdropClasses:
+        'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
+    onHide: () => {
+        console.log('drawer is hidden');
+    },
+    onShow: () => {
+        console.log('drawer is shown');
+    },
+    onToggle: () => {
+        console.log('drawer has been toggled');
+    },
+  };
+  
+  const $editTargetEl = document.getElementById('drawer-edit-default');
+  editDrawer = new Drawer($editTargetEl, options);  
+
+  const editPassForm = document.getElementById("editPassForm");  
+  editPassForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    editPassForm.classList.add("validated");
+
+    var pass = JSON.parse(editPassForm.querySelector("#edit-pass").value);
+    var passObject = JSON.parse(pass.passObject);
+
+    console.log('Current:', pass);
+
+    var fromDate = new Date(editPassForm.querySelector("#edit-valid-from-date").value + ' ' 
+                            + editPassForm.querySelector("#edit-valid-from-time").value);
+    if (new Date(fromDate) <= new Date()) {
+      var passStartTs = new Date(passObject.step1.validFromDate + ' ' + passObject.step1.validFromTime).getTime();
+      var newPassStartTs = fromDate.getTime();
+      if (newPassStartTs < passStartTs) {
+        document.getElementById('edit-valid-from-date').setCustomValidity("Invalid date/time field.");
+        document.getElementById('edit-valid-from-time').setCustomValidity("Invalid date/time field.");
+        showError('edit-result', 'Invalid date/time, start date cannot be in the past. Please select a valid future date/time.');
+      }
+    } else {
+      document.getElementById('edit-valid-from-date').setCustomValidity("");
+      document.getElementById('edit-valid-from-time').setCustomValidity("");
+    }
+
+
+    if (!editPassForm.checkValidity()) {
+      editPassForm.querySelectorAll(":invalid")[0].focus();
+      return;
+    }
+  
+    var computedEndDate = computeEndDate(
+                            editPassForm.querySelector("#edit-valid-from-date").value, 
+                            editPassForm.querySelector("#edit-valid-from-time").value,
+                            editPassForm.querySelector("#edit-expire-in").value, 
+                            editPassForm.querySelector("#edit-expire-in-units").value);
+    if (computedEndDate < new Date()) {
+      document.getElementById('edit-expire-in').setCustomValidity("Invalid expiry date/time.");
+      document.getElementById('edit-expire-in-units').setCustomValidity("Invalid expiry date/time.");
+      showError('edit-result', 'Invalid valid to date/time, end date cannot be in the past. Set a valid future date/time.');
+    }
+
+    if (!editPassForm.checkValidity()) {
+      editPassForm.querySelectorAll(":invalid")[0].focus();
+      return;
+    }
+
+    var computedRetentionDate = computeRetentionDate(computedEndDate, editPassForm.querySelector("#edit-retention").value, 
+                                        editPassForm.querySelector("#edit-retention-units").value);
+    if (computedRetentionDate < new Date()) {
+      document.getElementById('edit-retention').setCustomValidity("Invalid retention date/time.");
+      document.getElementById('edit-retention-units').setCustomValidity("Invalid retention date/time.");
+      showError('edit-result', 'Invalid retention date/time, cannot be in the past. Set a valid future date/time.');
+    }
+
+    var fromDateStr = fromDate.toLocaleDateString();
+    var parts = fromDateStr.split('/').map(x => x.padStart(2, '0'));
+    passObject.step1.validFromDate = parts[2] + '-' + parts[0] + '-' + parts[1];
+    passObject.step1.validFromTime = constructValidTime(fromDate);
+    passObject.step1.expireIn = editPassForm.querySelector("#edit-expire-in").value;
+    passObject.step1.expireInUnits = editPassForm.querySelector("#edit-expire-in-units").value;
+    passObject.step1.retention = editPassForm.querySelector("#edit-retention").value;
+    passObject.step1.retentionUnits = editPassForm.querySelector("#edit-retention-units").value;
+    passObject.step1.valid = 1;
+    
+    var startParts = fromDate.toLocaleDateString().split('/').map(x => x.padStart(2, '0'));
+    var endPats = computedEndDate.toLocaleDateString().split('/').map(x => x.padStart(2, '0'));
+    pass = {
+      ...pass,
+      startDate: new Date(passObject.step1.validFromDate + ' ' + passObject.step1.validFromTime).toLocaleString(),
+      startTs: new Date(passObject.step1.validFromDate + ' ' + passObject.step1.validFromTime).getTime(),
+      endDate: computedEndDate.toLocaleString(),
+      endTs: computedEndDate.getTime(),
+      retentionDate: computedRetentionDate.toLocaleString(),
+      retentionTs: computedRetentionDate.getTime(),
+      passObject: JSON.stringify(passObject),
+      subscribed: pass.subscribed,
+      expired: (Date.now() >= pass.endTs && !pass.expired),
+      valid: 1,
+    }
+
+    console.log('Updated:', pass);
+    
+    const json = JSON.stringify(pass);
+    const response = await fetch(`/passes/validity`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json
+    })
+
+    console.log(response)
+    if (response.status === 200) {
+      showResult('edit-result', 'Successfully modified the pass settings!');
+
+      setTimeout(() => {
+        editPassForm.classList.remove("validated");
+        editPassForm.reset();
+        document.getElementById('edit-modal-close').click()
+        resetResult("edit-result");
+        document.getElementById("refreshPassButton").click();
+      }, 1500);
+      showResult('edit-result', 'Successfully modified the pass settings!');
+    } else {
+      showError('edit-result', response.statusText);
+      setTimeout(() => {
+        editPassForm.classList.remove("validated");
+        editPassForm.reset();
+        document.getElementById('edit-modal-close').click()
+        resetResult("pass-result");
+        document.getElementById("refreshPassButton").click();
+        toastr.error(response.statusText)
+      }, 1500);
+    }
+  });
+
+  const editPasses = document.getElementsByClassName("editPassButton");
+  Array.from(editPasses).forEach(element => {
+    element.addEventListener("click", function (e) {
+      const passStr = e.currentTarget.dataset.pass;
+      var pass = JSON.parse(passStr)
+      console.log(pass);
+      var passObject = JSON.parse(pass.passObject);      
+      editPassForm.querySelector("#edit-pass").value = passStr;
+      editPassForm.querySelector("#edit-pass-name").value = pass.name;
+
+      // var today = new Date();
+      // var todayDate = today.toLocaleDateString();
+      // var parts = todayDate.split('/').map(x => x.padStart(2, '0'));
+      // editPassForm.querySelector("#edit-valid-from-date").setAttribute('min', parts[2] + '-' + parts[0] + '-' + parts[1]);
+      // editPassForm.querySelector("#edit-valid-from-date").setAttribute('value', parts[2] + '-' + parts[0] + '-' + parts[1]);
+      // buildValidFromTime(editPassForm.querySelector("#edit-valid-from-time"));
+
+      if (['pending', 'expired'].includes(path.split('/').pop())) {
+        document.getElementById('edit-valid-from-date').disabled = false;
+        document.getElementById('edit-valid-from-time').disabled = false;
+        document.getElementById('edit-valid-from-hint').classList.add('hidden');
+      } else {
+        document.getElementById('edit-valid-from-date').disabled = true;
+        document.getElementById('edit-valid-from-time').disabled = true;
+        document.getElementById('edit-valid-from-hint').classList.remove('hidden');
+      }
+      
+      var startDate = new Date(passObject.step1.validFromDate + ' ' + passObject.step1.validFromTime);
+      var startDateStr = startDate.toLocaleDateString();
+      var parts = startDateStr.split('/').map(x => x.padStart(2, '0'));
+      editPassForm.querySelector("#edit-valid-from-date").setAttribute('min', parts[2] + '-' + parts[0] + '-' + parts[1]);
+      editPassForm.querySelector("#edit-valid-from-date").setAttribute('value', parts[2] + '-' + parts[0] + '-' + parts[1]);
+      editPassForm.querySelector("#edit-valid-from-time").setAttribute('value', constructValidTime(startDate));
+
+      editPassForm.querySelector("#edit-expire-in").value = passObject.step1.expireIn;
+      editPassForm.querySelector("#edit-expire-in-units").value = passObject.step1.expireInUnits;
+      editPassForm.querySelector("#edit-retention").value = passObject.step1.retention;
+      editPassForm.querySelector("#edit-retention-units").value = passObject.step1.retentionUnits;
+    });
+  });
+
+  const $infoTargetEl = document.getElementById('drawer-info-default');
+  infoDrawer = new Drawer($infoTargetEl, options);  
+
+  const infoPasses = document.getElementsByClassName("infoPassButton");
+  Array.from(infoPasses).forEach(element => {
+    element.addEventListener("click", function (e) {
+      const passStr = e.currentTarget.dataset.pass;
+      var pass = JSON.parse(passStr)
+      console.log(pass);
+      var passObject = JSON.parse(pass.passObject);      
+      loadSummary('#drawer-info-default', passObject, pass);
+    });
+  });
+
+  $('#infoCloseButton').click(() => {
+    document.getElementById("info-modal-close").click();
+  });
+
+  const $provisionTargetEl = document.getElementById('drawer-provision-default');
+  provisionDrawer = new Drawer($provisionTargetEl, options);  
+
+  const provisionPasses = document.getElementsByClassName("provisionPassButton");
+  Array.from(provisionPasses).forEach(element => {
+    element.addEventListener("click", function (e) {
+      const passStr = e.currentTarget.dataset.pass;
+      var pass = JSON.parse(passStr)
+      document.getElementById('provision-pass').value = passStr;
+      resetSolPassMessages('#provisionPassForm');
+      var btns = document.querySelectorAll('#passProvisionButton');
+      btns.forEach((btn) => {
+        btn.classList.remove('hidden');
+      });
+    });
+  });
+
+  const provisionPassForm = document.getElementById("provisionPassForm");  
+  provisionPassForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var currentPass = JSON.parse(provisionPassForm.querySelector("#provision-pass").value);
+    var passObject = JSON.parse(currentPass.passObject);
+    await executeSolPass(passObject, '#provisionPassForm', 'create');
+  });
+
+  const $deprovisionTargetEl = document.getElementById('drawer-deprovision-default');
+  deprovisionDrawer = new Drawer($deprovisionTargetEl, options);  
+
+  const deprovisionPasses = document.getElementsByClassName("deprovisionPassButton");
+  Array.from(deprovisionPasses).forEach(element => {
+    element.addEventListener("click", function (e) {
+      const passStr = e.currentTarget.dataset.pass;
+      var pass = JSON.parse(passStr)
+      document.getElementById('deprovision-pass').value = passStr;
+      resetSolPassMessages('#deprovisionPassForm');
+      var btns = document.querySelectorAll('#passProvisionButton');
+      btns.forEach((btn) => {
+        btn.classList.remove('hidden');
+      });
+    });
+  });
+
+  const deprovisionPassForm = document.getElementById("deprovisionPassForm");  
+  deprovisionPassForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var currentPass = JSON.parse(deprovisionPassForm.querySelector("#deprovision-pass").value);
+    var passObject = JSON.parse(currentPass.passObject);
+    await executeSolPass(passObject, '#deprovisionPassForm', 'delete');
+    setTimeout(() => {
+      document.getElementById('deprovision-modal-close').click()
+    }, 1500);
+    document.getElementById("refreshPassButton").click();
+  });
+
+  const path = window.location.href.replace(/\/#/, "");
+  if (path.split('/').pop() === 'active') {
+    document.getElementById('new-pass-container').classList.remove('hidden');
+    document.querySelectorAll('.provision-block').forEach((block, index) => { block.classList.add('hidden'); });
+    document.querySelectorAll('.deprovision-block').forEach((block, index) => { block.classList.add('hidden'); });
+    document.querySelectorAll('.reflash-block').forEach((block, index) => { block.classList.add('hidden'); });
+  } else if (path.split('/').pop() === 'pending') {
+    document.getElementById('new-pass-container').classList.add('hidden');
+    document.querySelectorAll('.provision-block').forEach((block, index) => { block.classList.add('hidden'); });
+    document.querySelectorAll('.deprovision-block').forEach((block, index) => { block.classList.add('hidden'); });
+    document.querySelectorAll('.reflash-block').forEach((block, index) => { block.classList.add('hidden'); });
+  } else if (path.split('/').pop() === 'expired') {
+    document.getElementById('new-pass-container').classList.add('hidden');
+    document.querySelectorAll('.provision-block').forEach((block, index) => { block.classList.add('hidden'); });
+    document.querySelectorAll('.deprovision-block').forEach((block, index) => { block.classList.add('hidden'); });
+    document.querySelectorAll('.edit-block').forEach((block, index) => { block.classList.add('hidden'); });    
+  }
+
+  const $expireTargetEl = document.getElementById('drawer-expire-default');
+  expireDrawer = new Drawer($expireTargetEl, options); 
+
+  const removePasses = document.getElementsByClassName("removePassButton");
+  Array.from(removePasses).forEach(element => {
+    element.addEventListener("click", function (e) {
+      const passStr = e.currentTarget.dataset.pass;
+      var pass = JSON.parse(passStr)
+      document.getElementById('remove-pass-data').innerText = passStr;
+      if (pass.deactivated) {
+        document.getElementById('delete-created-resources').classList.add('hidden');
+        document.getElementById('delete-created-resources-hint').classList.add('hidden');
+      } else {
+        document.getElementById('delete-created-resources').classList.remove('hidden');
+        document.getElementById('delete-created-resources-hint').classList.remove('hidden');
+      }
+    });
+  });
+
+  const passDeleteButton = document.getElementById("passDeleteButton");
+  passDeleteButton.addEventListener("click", async function (e) {
+    const passStr = document.getElementById("remove-pass-data").innerText;
+    const pass = JSON.parse(passStr);
+    const path = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+    const response = await fetch(path + `?pass=${pass.name}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        deleteRDP: true,
+        deleteCP: document.getElementById('deletecp').checked,
+        deleteQ: document.getElementById('deleteq').checked
+      })
+    });
+
+    document.getElementById('remove-modal-close').click();
+    document.getElementById("refreshPassButton").click();
+
+    if (response.status !== 200) {
+      toastr.error(response.statusText)
+    } else {
+      toastr.success('SolPass successfully deleted')
+    }
+  });
+
+  const $removeTargetEl = document.getElementById('drawer-remove-default');
+  removeDrawer = new Drawer($removeTargetEl, options); 
+
+  const expirePasses = document.getElementsByClassName("expirePassButton");
+  Array.from(expirePasses).forEach(element => {
+    element.addEventListener("click", function (e) {
+      const passStr = e.currentTarget.dataset.pass;
+      var pass = JSON.parse(passStr)
+      document.getElementById('expire-pass-data').innerText = passStr;
+
+      const passObject = JSON.parse(pass.passObject);
+      if (passObject.step2.cpMode === 'useExisting')
+        document.getElementById('check-expire-cp').classList.add('hidden');
+      else
+        document.getElementById('check-expire-cp').classList.remove('hidden');
+
+      if (passObject.step2.qMode === 'useExisting')
+        document.getElementById('check-expire-q').classList.add('hidden');
+      else
+        document.getElementById('check-expire-q').classList.remove('hidden');
+    });
+  });
+
+  const passExpireButton = document.getElementById("passExpireButton");
+  passExpireButton.addEventListener("click", async function (e) {
+    const passStr = document.getElementById("expire-pass-data").innerText;
+    const pass = JSON.parse(passStr);
+    const path = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+    const response = await fetch(path + `/expire?pass=${pass.name}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        deleteRDP: document.getElementById('exp_deleterdp').checked,
+        deleteCP: document.getElementById('exp_deletecp').checked,
+        deleteQ: document.getElementById('exp_deleteq').checked
+      })
+    });
+
+    document.getElementById('expire-modal-close').click();
+    document.getElementById("refreshPassButton").click();
+
+    if (response.status !== 200) {
+      toastr.error(response.statusText)
+    } else {
+      toastr.success('SolPass successfully marked as expired')
+    }
+  });
+
+  const $reflashTargetEl = document.getElementById('drawer-reflash-default');
+  reflashDrawer = new Drawer($reflashTargetEl, options); 
+
+  const reflashPasses = document.getElementsByClassName("reflashPassButton");
+  Array.from(reflashPasses).forEach(element => {
+    element.addEventListener("click", function (e) {
+      const passStr = e.currentTarget.dataset.pass;
+      var pass = JSON.parse(passStr)
+      document.getElementById('reflash-pass-data').innerText = passStr;
+    });
+  });
+
+  const passReflashButton = document.getElementById("passReflashButton");
+  passReflashButton.addEventListener("click", async function (e) {
+    const passStr = document.getElementById("reflash-pass-data").innerText;
+    const pass = JSON.parse(passStr);
+    var passObject = JSON.parse(pass.passObject);
+
+    var currentDate = new Date();
+    var fromDateStr = currentDate.toLocaleDateString();
+    var parts = fromDateStr.split('/').map(x => x.padStart(2, '0'));
+    passObject.step1.validFromDate = parts[2] + '-' + parts[0] + '-' + parts[1];
+    passObject.step1.validFromTime = constructRevalidateFromTime(currentDate);
+    var computedEndDate = computeEndDate(passObject.step1.validFromDate, passObject.step1.validFromTime, 
+                                          passObject.step1.expireIn, passObject.step1.expireInUnits);
+    passObject.step1.valid = 1;
+
+    var computedRetentionDate = computeRetentionDate(computedEndDate, passObject.step1.retention, passObject.step1.retentionUnits);
+    var newPass = {
+      ...pass,
+      startDate: new Date(passObject.step1.validFromDate + ' ' + passObject.step1.validFromTime).toLocaleString(),
+      startTs: new Date(passObject.step1.validFromDate + ' ' + passObject.step1.validFromTime).getTime(),
+      endDate: computedEndDate.toLocaleString(),
+      endTs: computedEndDate.getTime(),
+      retentionDate: computedRetentionDate.toLocaleString(),
+      retentionTs: computedRetentionDate.getTime(),
+      passObject: JSON.stringify(passObject, replacer),
+      valid: 1,
+      expired: 0,
+      subscribed: 0,
+      activated: 0,
+      activationFailed: 0,
+      deactivating: 0,
+      deactivationFailed: 0,
+      errors: []
+    }
+
+    const path = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+    const response = await fetch(path + `/reactivate?pass=${pass.name}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newPass)
+    });
+
+    document.getElementById('reflash-modal-close').click();
+    document.getElementById("refreshPassButton").click();
+
+    if (response.status !== 200) {
+      toastr.error(response.statusText)
+    } else {
+      toastr.success('SolPass successfully reactivated')
+    }
+  });
+
+
+  const steps = document.querySelectorAll('.step');
+  const nextBtns = document.querySelectorAll('.nextBtn');
+  const prevBtns = document.querySelectorAll('.prevBtn');
+  const submitBtns = document.querySelectorAll('.submitBtn');
+  const doneBtns = document.querySelectorAll('.doneBtn');
+  let currentStep = 0;
+
+  const openModal = document.getElementById("open-add-modal");
+  openModal.addEventListener("click", function (e) {
+    const newPassForm = document.getElementById("newPassForm");  
+    newPassForm.reset();
+    startAtStep(0);
+
+    var today = new Date();
+    today.setMinutes(today.getMinutes() + 5);
+
+    var today = new Date();
+    var todayDate = today.toLocaleDateString();
+    var parts = todayDate.split('/').map(x => x.padStart(2, '0'));
+    const validFromDate = document.getElementById('valid-from-date');
+    validFromDate.setAttribute('min', parts[2] + '-' + parts[0] + '-' + parts[1]);
+    document.getElementById('valid-from-date').setAttribute('value', parts[2] + '-' + parts[0] + '-' + parts[1]);
+    console.log(document.getElementById('valid-from-date').value); // prints "2017-06-01"
+    resources.step1.validFromDate = document.getElementById('valid-from-date').value;
+
+    const validFromTime = document.getElementById('valid-from-time');
+    buildValidFromTime(validFromTime);
+    resources.step1.validFromTime = validFromTime.value;
+
+    // currentStep = 0;
+    // newPassForm.querySelectorAll(`.mstep`).forEach((step) => {
+    //   step.classList.add('hidden');
+    // });
+    // document.getElementById("step1").classList.remove('hidden');
+    // createCPOption.click();
+  });
+
+  const passCloseButton = document.getElementById("add-pass-close");
+  passCloseButton.addEventListener("click", function (e) {
+    const newPassForm = document.getElementById("newPassForm");  
+    newPassForm.reset();
+    document.getElementById('broker').value = '';
+    document.getElementById('cClientProfile').value = '';
+    document.getElementById('ueClientProfile').value = '';
+    document.getElementById('new-pass-label').innerText = "New SolPass";
+    // currentStep = 0;
+
+    // reset choice of selections
+    resources.step2.cpMode = 'create';
+    createCPContainer.classList.remove('hidden');
+    useExistingCPContainer.classList.add('hidden');    
+    clientProfileDropdownList.classList.add('hidden');
+    createCPOption.click();
+
+    resources.step2.qMode = 'create';
+    createQContainer.classList.remove('hidden');
+    useExistingQContainer.classList.add('hidden');
+    queueDropdownList.classList.add('hidden');
+    createQOption.click();
+  });
+
+  nextBtns.forEach((btn, index) => {
+    btn.addEventListener('click', async (e) => {
+      var validStep = await validateStep(currentStep, e);
+      if (validStep) {
+        if (btn.classList.contains('preSubmit')) {
+          // submit form
+          console.log('Submitting form...');
+          document.querySelectorAll('.info-tiles').forEach((el) => {
+            el.innerText = '';
+          });
+          loadSummary('#step5', resources);
+        } 
+        steps[currentStep].classList.add('hidden');
+        currentStep = Math.min(steps.length, currentStep + 1);
+        steps[currentStep].classList.remove('hidden');
+      }
+    });
+  });
+
+  prevBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      steps[currentStep].classList.add('hidden');
+      currentStep = Math.max(0, currentStep - 1);
+      steps[currentStep].classList.remove('hidden');
+    });
+  });
+
+  submitBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      steps[currentStep].classList.add('hidden');
+      currentStep = Math.min(steps.length, currentStep + 1);
+      steps[currentStep].classList.remove('hidden');
+      newPassForm.querySelectorAll(`.exec-status`).forEach((el) => {
+        el.classList.add('hidden');
+      });
+
+      executeSolPass(resources, '#step6', 'create');
+    });
+  });
+
+  doneBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      passCloseButton.click();
+      newPassForm.reset();
+      newPassForm.querySelectorAll(`.exec-status`).forEach((el) => {
+        el.classList.add('hidden');
+        document.getElementById("refreshPassButton").click();
+      });
+    });
+  });
+
+  function callItDone() {
+    var btns = document.querySelectorAll('#passProvisionButton');
+    btns.forEach((btn) => {
+      btn.classList.add('hidden');
+    });
+  };
+
+  async function validateStep(stepIndex, e) {
+    e.preventDefault();
+    resetError(`step${stepIndex+1}-result`);
+    console.log('Resources:', resources);
+    newPassForm.classList.add("validated");
+    if (!newPassForm.checkValidity()) {
+      var step = stepIndex + 1;
+      var els = [];
+      if (step === 1) {
+        var el = document.getElementById('passname');
+        if (el.value && el.value.length > 0) {
+          var validName = await fetch(`/passes/checkname?pass=${el.value}`)
+          .then(async (response) => {
+            if (response.status !== 200) {
+              showError('step1-result', response.statusText);
+              el.setCustomValidity("Invalid field.");
+              els.push(el);
+            } else {
+              el.setCustomValidity("");
+            }
+          });       
+        }
+
+        var dateStr = document.getElementById('valid-from-date').value + ' ' + document.getElementById('valid-from-time').value;
+        if (new Date(dateStr) < new Date()) {
+          showError('step1-result', 'Invalid date/time, cannot be in the past. Please select a future date/time.');
+          document.getElementById('valid-from-date').setCustomValidity("Invalid date/time field.");
+          document.getElementById('valid-from-time').setCustomValidity("Invalid date/time field.");
+        } else {
+          document.getElementById('valid-from-date').setCustomValidity("");
+          document.getElementById('valid-from-time').setCustomValidity("");
+        }
+
+        els = newPassForm.querySelectorAll(`.step${stepIndex+1}:invalid:not([style*="display:none"])`);
+      } else if (step === 2) {
+        els = newPassForm.querySelectorAll(`.step${stepIndex+1}:invalid:not([style*="display:none"])`);
+        els = Array.prototype.filter.call(els, function (el) {
+          if (!el.getAttribute('mode') || el.name !== 'clientProfile')
+            return el;
+          if (el.getAttribute('mode') === resources.step2.cpMode) 
+            return el;
+        });
+
+        els = Array.prototype.filter.call(els, function (el) {
+          if (!el.getAttribute('mode') || el.name !== 'queue')
+            return el;
+          if (el.getAttribute('mode') === resources.step2.qMode) 
+            return el;
+        });
+      } else if (step === 3) {
+        els = newPassForm.querySelectorAll(`.step${stepIndex+1}:invalid:not([style*="display:none"])`);
+        els = Array.prototype.filter.call(els, function (el) {
+          if (!el.getAttribute('mode'))
+            return el;
+          if (el.getAttribute('mode') === resources.step2.qMode) 
+            return el;
+        });
+
+        var subscriptions = document.getElementById('subscriptions');
+        var invalid = false;
+        if (subscriptions.value && subscriptions.value.split(',').length > 0) {
+          var subs = subscriptions.value.split(',').map(x => x.replace('\n', '').trim()).filter(x => x.length > 0);
+          subs.forEach((sub) => {
+            if (!sub.match(/^(?:(?:[a-z0-9_-]+|[a-z0-9_-]+\*|\*)\/)*([a-z0-9_-]+|[a-z0-9_-]+\*|\*|>)$/i)) {
+              console.log('Invalid Sub: ', sub);
+              invalid = true;
+            }
+          });
+          if (!invalid)
+            subscriptions.setCustomValidity("");
+          else {
+            subscriptions.setCustomValidity("Invalid field.");
+          }
+
+          els = newPassForm.querySelectorAll(`.step${stepIndex+1}:invalid:not([style*="display:none"])`);
+        } else {
+          subscriptions.setCustomValidity("Invalid field.");
+          els = newPassForm.querySelectorAll(`.step${stepIndex+1}:invalid:not([style*="display:none"])`);
+        }
+      } else if (step === 4) {
+        var target = newPassForm.querySelector('#crequesttarget');
+        if (!target.value || !target.value.startsWith('/'))
+          target.setCustomValidity("Invalid field.")
+        else
+          target.setCustomValidity("");
+        els = newPassForm.querySelectorAll(`.step${stepIndex+1}:invalid:not([style*="display:none"])`);
+      } else {
+        els = newPassForm.querySelectorAll(`.step${stepIndex+1}:invalid:not([style*="display:none"])`);
+      } 
+
+      if (els && els.length > 0) {
+        els[0].focus();
+        return false;
+      }
+    }
+
+    newPassForm.classList.remove("validated");
+    return true;
+  }
+
+  const brokerSelected = document.getElementById('broker');
+  const brokerDropdownButton = document.getElementById('brokerDropdownButton');
+  const brokerDropdownList = document.getElementById('brokerDropdownList');
+  const brokerDropdown = document.getElementById('brokerDropdown');
+
+  async function fetchBrokers() {
+    try {
+      const url = new URL(window.location.href);
+      const brokers = await fetch(url.origin + `/getbrokers`)
+      .then(async (response) => {
+        if (response.status !== 200) {
+          toastr.error(response.statusText)
+        }
+        return await response.json();
+      });
+      
+      resources.brokers = brokers;
+      populateBrokerOptions(brokers);
+    } catch (error) {
+        console.error('Error fetching broker data:', error);
+    }
+  }
+
+  // Function to populate broker options
+  function populateBrokerOptions(brokers) {
+    if (!brokers.length) {
+      showError('step1-result', 'No brokers configured. Please configure a broker first.');
+      return;
+    }
+
+    brokers.forEach(broker => {
+        const li = document.createElement('li');
+        li.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
+        li.innerHTML = `<div class="font-bold">${broker.name}</div>
+                        <div class="text-sm text-gray-500">URL: ${broker.url}</div>
+                        <div class="text-sm text-gray-500">Broker: ${broker.vpn}</div>
+                        <div class="inline-flex justify-center text-base font-semibold text-gray-900 dark:text-white">` +
+                        (broker.status ? 
+                            `<div class="self-center h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>` :
+                            `<div class="self-center h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>`) +
+                        `<div class="text-sm font-normal text-gray-500 dark:text-gray-400">${new Date(broker.lastTested).toLocaleString()}></div>
+                        </div>`;
+        li.addEventListener('click', () => {
+            resources.step2.currentBroker = broker.name;
+            document.getElementById('broker').setAttribute('value', broker.name);
+            brokerDropdown.classList.add('hidden');
+        });
+        brokerDropdownList.appendChild(li);
+    });
+
+    resources.step2.currentBroker = 'Local Broker' // brokers[0].name;
+    document.getElementById('broker').setAttribute('value', resources.step2.currentBroker);
+    fetchClientProfiles(resources.step2.currentBroker)
+  }
+
+  // STEP 1 - PASS INFO
+  const passName = document.getElementById('passname');
+  resources.step1.passName = document.getElementById('passname').value;
+  passName.addEventListener('change', function() {
+    resources.step1.passName = document.getElementById('passname').value;
+  });
+
+  var today = new Date();
+  today.setMinutes(today.getMinutes() + 5);
+
+  var todayDate = today.toLocaleDateString();
+  var parts = todayDate.split('/').map(x => x.padStart(2, '0'));
+  const validFromDate = document.getElementById('valid-from-date');
+  validFromDate.setAttribute('min', parts[2] + '-' + parts[0] + '-' + parts[1]);
+  document.getElementById('valid-from-date').setAttribute('value', parts[2] + '-' + parts[0] + '-' + parts[1]);
+  console.log(document.getElementById('valid-from-date').value); // prints "2017-06-01"
+
+  resources.step1.validFromDate = validFromDate.value;
+  validFromDate.addEventListener('change', function() {
+    resources.step1.validFromDate = document.getElementById('valid-from-date').value;
+  });
+
+  const validFromTime = document.getElementById('valid-from-time');
+  resources.step1.validFromTime = validFromTime.value;
+  validFromTime.addEventListener('change', function() {
+    resources.step1.validFromTime = document.getElementById('valid-from-time').value;
+  });
+
+  const expireIn = document.getElementById('expire-in');
+  resources.step1.expireIn = expireIn.value;
+  expireIn.addEventListener('change', function() {
+    resources.step1.expireIn = document.getElementById('expire-in').value;
+  });
+
+  const expireInUnits = document.getElementById('expire-in-units');
+  resources.step1.expireInUnits = expireInUnits.value;
+  expireInUnits.addEventListener('change', function() {
+    resources.step1.expireInUnits = this.value;
+  });
+
+  const retention = document.getElementById('retention');
+  resources.step1.retention = retention.value;
+  retention.addEventListener('change', function() {
+    resources.step1.retention = document.getElementById('retention').value;
+  });
+
+  const retentionUnits = document.getElementById('retention-units');
+  resources.step1.retentionUnits = retentionUnits.value;
+  retentionUnits.addEventListener('change', function() {
+    resources.step1.retentionUnits = this.value;
+  });
+
+  // STEP 2 - SOLACE CONNECTIVITY
+  // Fetch broker resources
+  fetchBrokers();
+
+  // QUEUE SELECT
+  const queueDropdownButton = document.getElementById('queueDropdownButton');
+  const queueDropdownList = document.getElementById('queueDropdownList');
+  const queueDropdown = document.getElementById('queueDropdown');
+  const cQueueFields = document.getElementById('cQueueFields');
+
+  async function fetchQueues(name) {
+      try {
+        const url = new URL(window.location.href);
+        const queues = await fetch(url.origin + `/getqueues?broker=${name}`)
+        .then(async (response) => {
+          if (response.status !== 200) {
+            toastr.error(response.statusText)
+          }
+          return await response.json();
+        });
+        
+        resources.queues = queues;
+        populateQueueOptions();
+      } catch (error) {
+          console.error('Error fetching broker data:', error);
+      }
+  }
+
+  function populateQueueOptions() {
+    if (resources.step2.qMode === 'create') {
+      createQContainer.classList.remove('hidden');
+      useExistingQContainer.classList.add('hidden');
+      createQOption.click();
+    } else {
+      createQContainer.classList.add('hidden');
+      useExistingQContainer.classList.remove('hidden');
+      useExistingQOption.click();
+    }
+
+    if (useExistingQOption.checked && (!resources.queues || !resources.queues.length)) {
+      showError('step2-result', 'No queues found on the broker. Please configure a queue first.');
+      return;
+    }
+
+    document.getElementById('ueQueue').value = '';
+    resources.queues.forEach(q => {
+        const li = document.createElement('li');
+        li.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
+        li.innerHTML = `<div class="font-bold">${q.queueName}</div>`;
+        li.addEventListener('click', async () => {
+            resources.step2.currentQueue = q.queueName;
+            document.getElementById('ueQueue').value = q.queueName;
+            queueDropdownList.classList.add('hidden');
+
+            await fetchQueueSubscriptions(resources.step2.currentBroker, resources.step2.currentQueue);
+        });
+        queueDropdownList.appendChild(li);
+    });
+  }
+  
+  async function fetchQueueSubscriptions(broker, queue) {
+    try {
+        const url = new URL(window.location.href);
+        const response = await fetch(url.origin + `/getqueuesubscriptions?broker=${broker}&queue=${queue}`)
+        .then(async (response) => {
+          if (response.status !== 200) {
+            toastr.error(response.statusText);
+            return;
+          }
+          var subs = await response.json();
+          resources.step3.subscriptions = subs.join(', ');
+          document.getElementById('subscriptions').value = resources.step3.subscriptions;
+      });
+        
+      } catch (error) {
+          console.error('Error fetching queue subscriptions:', error);
+      }
+  }
+
+  const createQOption = document.getElementById('createQ');
+  const createQContainer = document.getElementById('createQContainer');
+  const createQ = $('#createQContainer #queue');
+  const useExistingQOption = document.getElementById('existingQ');
+  const useExistingQContainer = document.getElementById('existingQContainer');
+  const useExistingQ = $('#existingQContainer #queue');
+  const cQueue = document.getElementById('cQueue');
+  resources.step2.currentQueue = cQueue.value;
+  cQueue.addEventListener('change', function() {
+    resources.step2.currentQueue = document.getElementById('cQueue').value;
+  });
+
+  // Show or hide input fields based on selected radio button
+  function handleQOptionChange() {
+    if (createQOption.checked) {
+      resources.step2.qMode = 'create';
+      resources.step2.currentQueue = cQueue.value;
+      cQueueFields.classList.remove('hidden');
+      createQContainer.classList.remove('hidden');
+      createQ.each(function() {
+        this.classList.remove('hidden')
+      });
+      useExistingQContainer.classList.add('hidden');
+      useExistingQ.each(function() {
+        this.classList.add('hidden')
+      });
+      queueDropdownList.classList.add('hidden');
+      // document.getElementById('subscriptions').setAttribute('disabled', 'false');
+      // document.getElementById('subscriptions').innerText = '';
+    } else if (useExistingQOption.checked) {
+      cQueueFields.classList.add('hidden');
+      createQContainer.classList.add('hidden');
+      fetchQueues(resources.step2.currentBroker)
+      resources.step2.qMode = 'useExisting';
+      resources.step2.currentQueue = useExistingQ.value;
+      createQ.each(function() {
+        this.classList.add('hidden')
+      });
+      useExistingQContainer.classList.remove('hidden');
+      useExistingQ.each(function() {
+        this.classList.remove('hidden')
+      });
+      queueDropdownList.classList.remove('hidden');
+      // document.getElementById('subscriptions').setAttribute('disabled', 'true');
+      // document.getElementById('helper-text-subscriptions').innerHTML = '<span class="font-bold">DISABLED:</span> Subscriptions on an existing queue cannot be altered, use other means to update subscriptions.'
+    }
+  }
+
+  queueDropdownButton.addEventListener('click', () => {
+    document.getElementById('queueDropdown').classList.remove('hidden');
+    document.getElementById('queueDropdownList').classList.remove('hidden');
+  });
+
+  // Attach event listeners to radio buttons
+  createQOption.addEventListener('change', handleQOptionChange);
+  useExistingQOption.addEventListener('change', handleQOptionChange);  
+
+  const accessTypeEl = document.getElementById('qaccesstype');
+  resources.step2.accessType = accessTypeEl.value;
+  accessTypeEl.addEventListener('change', function() {
+    resources.step2.accessType = accessTypeEl.value;
+  });
+
+  const respectTtlEl = document.getElementById('qrespectttl');
+  resources.step2.respectTTL = respectTtlEl.checked;
+  respectTtlEl.addEventListener('change', function() {
+    resources.step2.respectTTL = respectTtlEl.checked;
+  });
+
+  const maxTtlEl = document.getElementById('qmaxttl');
+  resources.step2.maxTTL = maxTtlEl.value;
+  maxTtlEl.addEventListener('change', function() {
+    resources.step2.maxTTL = maxTtlEl.value;
+  });
+
+  // CLIENT PROFILE SELECT
+  const clientProfileDropdownButton = document.getElementById('clientProfileDropdownButton');
+  const clientProfileDropdownList = document.getElementById('clientProfileDropdownList');
+  const clientProfileDropdown = document.getElementById('clientProfileDropdown');
+  
+  async function fetchClientProfiles(name) {
+      try {
+        const url = new URL(window.location.href);
+        const clientProfiles = await fetch(url.origin + `/getclientprofiles?broker=${name}`)
+        .then(async (response) => {
+          if (response.status !== 200) {
+           toastr.error(response.statusText)
+          }
+          return await response.json();
+        });
+        
+        resources.clientProfiles = clientProfiles;
+        populateClientProfileOptions();
+      } catch (error) {
+          console.error('Error fetching broker data:', error);
+      }
+  }
+
+  function populateClientProfileOptions() {
+    if (resources.step2.cpMode === 'create') {
+      createCPContainer.classList.remove('hidden');
+      useExistingCPContainer.classList.add('hidden');
+      createCPOption.click();
+    } else {
+      createCPContainer.classList.add('hidden');
+      useExistingCPContainer.classList.remove('hidden');
+      useExistingCPOption.click();
+    }
+
+    if (useExistingCPOption.checked && (!resources.clientProfiles || !resources.clientProfiles.length)) {
+      showError('step2-result', 'No client profiles found on the broker. Please configure a client profile first.');
+      return;
+    }
+
+    document.getElementById('ueClientProfile').value = '';
+    resources.clientProfiles.forEach(profile => {
+        const li = document.createElement('li');
+        li.className = 'px-4 py-2 hover:bg-gray-100 cursor-pointer';
+        li.innerHTML = `<div class="font-bold">${profile.clientProfileName}</div>`;
+        li.addEventListener('click', () => {
+            resources.step2.currentClientProfile = profile.clientProfileName;
+            document.getElementById('ueClientProfile').value = profile.clientProfileName;
+            clientProfileDropdownList.classList.add('hidden');
+        });
+        clientProfileDropdownList.appendChild(li);
+    });
+  }
+  
+  const createCPOption = document.getElementById('createCP');
+  const createCPContainer = document.getElementById('createCPContainer');
+  const createCP = $('#createCPContainer #clientProfile');
+  const useExistingCPOption = document.getElementById('existingCP');
+  const useExistingCPContainer = document.getElementById('existingCPContainer');
+  const useExistingCP = $('#existingCPContainer #clientProfile');
+  
+  const cClientProfile = document.getElementById('cClientProfile');
+  resources.step2.currentClientProfile = cClientProfile.value;
+  cClientProfile.addEventListener('change', function() {
+    resources.step2.currentClientProfile = document.getElementById('cClientProfile').value;
+  });
+
+  // Show or hide input fields based on selected radio button
+  function handleCPOptionChange() {
+    if (createCPOption.checked) {
+      resources.step2.cpMode = 'create';
+      resources.step2.currentClientProfile = cClientProfile.value;
+      createCPContainer.classList.remove('hidden');
+      createCP.each(function() {
+        this.classList.remove('hidden')
+      });
+      useExistingCPContainer.classList.add('hidden');
+      useExistingCP.each(function() {
+        this.classList.add('hidden')
+      });
+      clientProfileDropdownList.classList.add('hidden');
+    } else if (useExistingCPOption.checked) {
+      resources.step2.cpMode = 'useExisting';
+      resources.step2.currentClientProfile = useExistingCP.value;
+      createCPContainer.classList.add('hidden');
+      createCP.each(function() {
+        this.classList.add('hidden')
+      });
+      useExistingCPContainer.classList.remove('hidden');
+      useExistingCP.each(function() {
+        this.classList.remove('hidden')
+      });
+      clientProfileDropdownList.classList.remove('hidden');
+    }
+  }
+
+  clientProfileDropdownButton.addEventListener('click', () => {
+    document.getElementById('clientProfileDropdown').classList.remove('hidden');
+    document.getElementById('clientProfileDropdownList').classList.remove('hidden');
+  });
+
+  // Attach event listeners to radio buttons
+  createCPOption.addEventListener('change', handleCPOptionChange);
+  useExistingCPOption.addEventListener('change', handleCPOptionChange);
+
+  // STEP 3 - REST DELIVERY POINT
+  const rdpNameEl = document.getElementById('rdpname');
+  resources.step3.rdpName = rdpNameEl.value;
+  rdpNameEl.addEventListener('change', function() {
+    resources.step3.rdpName = rdpNameEl.value;
+  });
+
+  const serviceEl = document.getElementById('service');
+  resources.step3.serviceName = serviceEl.value;
+  serviceEl.addEventListener('change', function() {
+    resources.step3.serviceName = serviceEl.value;
+  });
+
+  const vendorEl = document.getElementById('vendor');
+  resources.step3.vendorName = vendorEl.value;
+  vendorEl.addEventListener('change', function() {
+    resources.step3.vendorName = vendorEl.value;
+  });
+  
+  const subscriptionsEl = document.getElementById('subscriptions');
+  resources.step3.subscriptions = subscriptionsEl.value.split(',')
+                                      .map(x => x.replace('\n', '').trim())
+                                      .filter(x => x.length > 0)
+                                      .join(', ');
+  subscriptionsEl.addEventListener('change', function() {    
+    resources.step3.subscriptions = subscriptionsEl.value.split(',')
+                                        .map(x => x.replace('\n', '').trim())
+                                        .filter(x => x.length > 0)
+                                        .join(', ');
+    resources.step3.sMode = resources.step3.subscriptions.length > 0 ? 'create' : 'useExisting';
+  });
+
+  // STEP 4 - REST CONSUMER
+  // CONSUMER 
+  const consumerNameEl = document.getElementById('cconsumername');
+  resources.step4.consumerName = consumerNameEl.value;
+  consumerNameEl.addEventListener('change', function() {
+    resources.step4.consumerName = consumerNameEl.value;
+  });
+
+  const requestTargetEl = document.getElementById('crequesttarget');
+  resources.step4.requestTarget = requestTargetEl.value;
+  requestTargetEl.addEventListener('change', function() {
+    resources.step4.requestTarget = requestTargetEl.value;
+  });
+
+  const requestMethodEl = document.getElementById('crequestmethod');
+  resources.step4.requestMethod = requestMethodEl.value;
+  requestMethodEl.addEventListener('change', function() {
+    resources.step4.requestMethod = requestMethodEl.value;
+  });
+
+  const remoteHostEl = document.getElementById('cremotehost');
+  resources.step4.remoteHost = remoteHostEl.value;
+  remoteHostEl.addEventListener('change', function() {
+    resources.step4.remoteHost = remoteHostEl.value;
+  });
+
+  const remotePortEl = document.getElementById('crempoteport');
+  resources.step4.remotePort = remotePortEl.value;
+  remotePortEl.addEventListener('change', function() {
+    resources.step4.remotePort = remotePortEl.value;
+  });
+
+  const tlsEnabledEl = document.getElementById('ctlsenabled');
+  resources.step4.tlsEnabled = tlsEnabledEl.checked;
+  tlsEnabledEl.addEventListener('change', function() {
+    resources.step4.tlsEnabled = tlsEnabledEl.checked;
+    if (resources.step4.tlsEnabled) {
+      resources.step4.remotePort = 443;
+      remotePortEl.value = 443;
+    } else {
+      resources.step4.remotePort = 80;
+      remotePortEl.value = 80;
+    }
+  });
+
+  function loadSummary(bucket, pass, passRecord = null) {
+    // SUMMARY
+    const infoSolPass = $(bucket + ' #info-solpass');
+    const infoBroker = $(bucket + ' #info-broker');
+    const infoQueue = $(bucket + ' #info-queue');
+    const infoClientProfile = $(bucket + ' #info-clientprofile');
+    const infoRdp = $(bucket + ' #info-rdp');
+    const infoRdpQueueBinding = $(bucket + ' #info-rdpqueuebinding');
+    const infoRdpConsumer = $(bucket + ' #info-rdpconsumer');
+    const infoStatus = $(bucket + ' #info-status');
+
+    // SOLPASS
+    var el = document.createElement('div');
+    el.classList.add('key-value-flex');
+    el.innerHTML = `
+      <div class="key">SolPass Name</div><div class="value">${pass.step1.passName}</div>
+      <div class="key">Valid From</div><div class="value">${pass.step1.validFromDate} ${pass.step1.validFromTime}</div>
+      <div class="key">Expire In</div><div class="value">${pass.step1.expireIn} ${pass.step1.expireInUnits}</div>
+      <div class="key">Message Retention</div><div class="value">${pass.step1.retention} ${pass.step1.retentionUnits}</div>
+    `;
+    infoSolPass.empty().append(el);
+
+    // BROKER
+    el = document.createElement('div');
+    el.classList.add('key-value-flex');
+    el.innerHTML = `
+      <div class="key">SolPass Name</div><div class="value">${pass.step2.currentBroker}</div>
+    `;
+    infoBroker.empty().append(el);
+
+    // QUEUE
+    el = document.createElement('div');
+    el.classList.add('key-value-flex');
+    el.innerHTML = `
+      <div class="key">Mode</div><div class="value">${pass.step2.qMode === 'create' ? 'Create Queue' : 'Use Existing Queue'}</div>
+      <div class="key">Queue Name</div><div class="value">${pass.step2.currentQueue}</div>
+    `;
+    if (pass.step2.qMode === 'create') {
+      el.innerHTML += `
+        <div class="key">Access Type</div><div class="value">${pass.step2.accessType}</div>
+        <div class="key">Respect TTL</div><div class="value">${pass.step2.respectTTL}</div>
+        <div class="key">Max TTL</div><div class="value">${pass.step2.maxTTL}</div>
+        <div class="key">Subscriptions</div><div class="value">${pass.step3.subscriptions}</div>
+      `;
+    }
+    infoQueue.empty().append(el);
+
+    // CLIENT PROFILE
+    el = document.createElement('div');
+    el.classList.add('key-value-flex');
+    el.innerHTML = `
+      <div class="key">Mode</div><div class="value">${pass.step2.cpMode === 'create' ? 'Create Client Profile' : 'Use Existing Client Profile'}</div>
+      <div class="key">Client Profile Name</div><div class="value">${pass.step2.currentClientProfile}</div>
+    `;
+    infoClientProfile.empty().append(el);
+
+    // REST DELIVERY POINT
+    el = document.createElement('div');
+    el.classList.add('key-value-flex');
+    el.innerHTML = `
+      <div class="key">REST Delivery Point Name</div><div class="value">${pass.step3.rdpName}</div>
+      <div class="key">Service Name</div><div class="value">${pass.step3.serviceName}</div>
+      <div class="key">Vendor Name</div><div class="value">${pass.step3.vendorName}</div>
+    `;
+    infoRdp.empty().append(el);
+
+    // REST DELIVERY POINT - QUEUE BINDING
+    el = document.createElement('div');
+    el.classList.add('key-value-flex');
+    el.innerHTML = `
+      <div class="key">HTTP Request Target</div><div class="value">${pass.step4.requestTarget}</div>
+    `;
+    infoRdpQueueBinding.empty().append(el);
+
+    // REST DELIVERY POINT - REST CONSUMER
+    el = document.createElement('div');
+    el.classList.add('key-value-flex');
+    el.innerHTML = `
+      <div class="key">RDP Consumer Name</div><div class="value">${pass.step4.consumerName}</div>
+      <div class="key">Request Method</div><div class="value">${pass.step4.requestMethod}</div>
+      <div class="key">Request Target</div><div class="value">
+        ${(pass.step4.tlsEnabled ? 'https://' : 'http://') +
+          pass.step4.remoteHost + ':' + pass.step4.remotePort + pass.step4.requestTarget}
+      </div>      
+    `;
+    infoRdpConsumer.empty().append(el);
+
+    if (passRecord) {
+      // REST DELIVERY POINT - STATUS
+      el = document.createElement('div');
+      el.classList.add('key-value-flex');
+      el.innerHTML = `
+        <div class="key">Valid</div><div class="value">${passRecord.valid ? true : false}</div>
+        <div class="key">Expired</div><div class="value">${passRecord.expired ? true : false}</div>
+        <div class="key">Subscribed</div><div class="value">${passRecord.subscribed ? true : false}</div>
+        <div class="key">Activated</div><div class="value">${passRecord.activated ? true : false}</div>
+        <div class="key">Activation Failed</div><div class="value">${passRecord.activationFailed ? true : false}</div>
+        <div class="key">Deactivated</div><div class="value">${passRecord.deactivated ? true : false}</div>
+        <div class="key">Deactivation Failed</div><div class="value">${passRecord.deactivationFailed ? true : false}</div>
+      `;
+      infoStatus.empty().append(el);
+    }
+
+  }
+
+  var ignore = [ 'brokers', 'clientProfiles', 'queues', 'objs' ];
+  function replacer(key, value) {
+    // Filtering out properties
+    if (ignore.includes(key)) {
+      return undefined;
+    }
+    return value;
+  }
+
+  // EXECUTE SOLPASS CREATION
+  function resetSolPassMessages(bucket) {
+    $(bucket + ' #exec-1-success').text('');
+    $(bucket + ' #exec-1-error').text('');
+    $(bucket + ' #exec-2-success').text('');
+    $(bucket + ' #exec-2-error').text('');
+    $(bucket + ' #exec-3-success').text('');
+    $(bucket + ' #exec-3-error').text('');
+    $(bucket + ' #exec-4-success').text('');
+    $(bucket + ' #exec-4-error').text('');
+    $(bucket + ' #exec-5-success').text('');
+    $(bucket + ' #exec-5-error').text('');
+    $(bucket + ' #exec-6-success').text('');
+    $(bucket + ' #exec-6-error').text('');
+    $(bucket + ' #revert-changes').addClass('hidden');
+  }
+
+  async function executeSolPass(pass, bucket, op = 'create') {
+    resetSolPassMessages(bucket);
+    pass.objs = pass.objs ? pass.objs : {};
+
+    var executionFailed = false;
+    (pass.step2.qMode === 'create') ?
+      (op === 'create' ? $(bucket + ' #exec-2-queue').text('Creating Queue') : $(bucket + ' #exec-2-queue').text('Deleting Queue')) :
+      $(bucket + ' #exec-2-queue').text('Checking Queue');
+    (pass.step2.cpMode === 'create') ?
+      (op === 'create' ? $(bucket + ' #exec-3-clientprofile').text('Creating Client Profile') : 
+                        $(bucket + ' #exec-3-clientprofile').text('Deleting Client Profile')) :
+      $(bucket + ' #exec-3-clientprofile').text('Checking Client Profile');
+
+    // check broker connection
+    const url = new URL(window.location.href);
+    const broker = await fetch(url.origin + `/exec/broker/test?broker=${pass.step2.currentBroker}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(async (response) => {
+        if (response.status === 500) {
+          $(bucket + ' #exec-1-error').text(`Could not connect to broker: ${response.statusText}`)
+          $(bucket + ' #exec-1-error').removeClass('hidden');
+          executionFailed = true;
+          callItDone();
+        } else {
+          $(bucket + ' #exec-1-success').text('Broker connection successful')
+          $(bucket + ' #exec-1-success').removeClass('hidden');
+        }
+      })
+      .catch((error) => {
+        $(bucket + ' #exec-1-error').text(`${error.toString()}`)
+        $(bucket + ' #exec-1-error').removeClass('hidden');
+        executionFailed = true;
+        callItDone();
+      });
+    
+    // check or create queue
+    if (!executionFailed && pass.step2.qMode === 'create') {
+      await fetch(url.origin + `/exec/queue/${op}?broker=${pass.step2.currentBroker}`, {
+                                method: "POST",
+                                headers: {
+                                  accept: 'application/json;charset=UTF-8',
+                                  "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                  accessType: pass.step2.accessType.toLowerCase(),
+                                  // egressEnabled: false,
+                                  // ingressEnabled: false,
+                                  respectTtlEnabled: pass.step2.respectTTL,
+                                  maxTtl: parseInt(pass.step2.maxTTL),
+                                  permission: "consume",
+                                  queueName: pass.step2.currentQueue,
+                                  subscriptions: pass.step3.subscriptions
+                                })})
+      .then(async (response) => {
+        if (response.status === 500) {
+          $(bucket + ' #exec-2-error').text(`${response.statusText}`)
+          $(bucket + ' #exec-2-error').removeClass('hidden');
+          executionFailed = true;
+          callItDone();
+        } else {
+          $(bucket + ' #exec-2-success').text(`Queue ${op} successful`)
+          $(bucket + ' #exec-2-success').removeClass('hidden');
+          pass.objs.queue = true;
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        $(bucket + ' #exec-2-error').text(`${error.toString()}`)
+        $(bucket + ' #exec-2-error').removeClass('hidden');
+        executionFailed = true;
+        callItDone();
+      });
+    } 
+    else if (!executionFailed && pass.step2.qMode === 'useExisting') {
+      await fetch(url.origin + `/exec/queue/test?broker=${pass.step2.currentBroker}&queue=${pass.step2.currentQueue}`, {
+        method: "POST",
+        headers: {
+          accept: 'application/json;charset=UTF-8',
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          subscriptions: pass.step3.subscriptions
+        })
+      })
+      .then(async (response) => {
+        if (response.status === 500) {
+          $(bucket + ' #exec-2-error').text(`${response.statusText}`)
+          $(bucket + ' #exec-2-error').removeClass('hidden');
+          executionFailed = true;
+          callItDone();
+        } else {
+          $(bucket + ' #exec-2-success').text('Queue exists')
+          $(bucket + ' #exec-2-success').removeClass('hidden');
+        }
+      })
+      .catch((error) => {
+        $(bucket + ' #exec-2-error').text(`${error.toString()}`)
+        $(bucket + ' #exec-2-error').removeClass('hidden');
+        executionFailed = true;
+        callItDone();
+      });
+    }
+
+    // check or create client profile
+    if (!executionFailed && pass.step2.cpMode === 'create') {
+      await fetch(url.origin + `/exec/clientprofile/${op}?broker=${pass.step2.currentBroker}`, {
+                                method: "POST",
+                                headers: {
+                                  accept: 'application/json;charset=UTF-8',
+                                  "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                  allowGuaranteedMsgReceiveEnabled: true,
+                                  allowGuaranteedMsgSendEnabled: true,
+                                  clientProfileName: pass.step2.currentClientProfile
+                                })})
+      .then(async (response) => {
+        if (response.status === 500) {
+          $(bucket + ' #exec-3-error').text(`${response.statusText}`)
+          $(bucket + ' #exec-3-error').removeClass('hidden');
+          executionFailed = true;
+          callItDone();
+        } else {
+          $(bucket + ' #exec-3-success').text(`Client Profile ${op} successful`)
+          $(bucket + ' #exec-3-success').removeClass('hidden');
+          pass.objs.clientProfile = true;
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        $(bucket + ' #exec-3-error').text(`${error.toString()}`)
+        $(bucket + ' #exec-3-error').removeClass('hidden');
+        executionFailed = true;
+        callItDone();
+      });
+    } 
+    else if (!executionFailed && pass.step2.cpMode === 'useExisting'){
+      await fetch(url.origin + `/exec/clientprofile/test?broker=${pass.step2.currentBroker}&clientprofile=${pass.step2.currentClientProfile}`, {
+        method: "POST"
+      })
+      .then(async (response) => {
+        if (response.status === 500) {
+          $(bucket + ' #exec-3-error').text(`${response.statusText}`)
+          $(bucket + ' #exec-3-error').removeClass('hidden');
+          executionFailed = true;
+          callItDone();
+        } else {
+          $(bucket + ' #exec-3-success').text('Client Profile exists')
+          $(bucket + ' #exec-3-success').removeClass('hidden');
+        }
+      })
+      .catch((error) => {
+        $(bucket + ' #exec-3-error').text(`${error.toString()}`)
+        $(bucket + ' #exec-3-error').removeClass('hidden');
+        executionFailed = true;
+        callItDone();
+      });
+    }
+
+    // check webhook endpoint
+    if (!executionFailed) {
+      await fetch(url.origin + `/exec/webhook/test`, {
+                                method: "POST",
+                                headers: {
+                                  accept: 'application/json;charset=UTF-8',
+                                  "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                  target: pass.step4.requestTarget,
+                                  method: pass.step4.requestMethod,
+                                  host: pass.step4.remoteHost,
+                                  port: pass.step4.remotePort,
+                                  tls: pass.step4.tlsEnabled
+                                })})      
+      .then(async (response) => {
+        if (response.status === 500) {
+          $(bucket + ' #exec-4-error').text(`${response.statusText}`)
+          $(bucket + ' #exec-4-error').removeClass('hidden');
+          executionFailed = true;
+          callItDone();
+        } else {
+          $(bucket + ' #exec-4-success').text('Webhook endpoint not reachable')
+          $(bucket + ' #exec-4-success').removeClass('hidden');
+        }
+      })
+      .catch((error) => {
+        $(bucket + ' #exec-4-error').text(`${error.toString()}`)
+        $(bucket + ' #exec-4-error').removeClass('hidden');
+        executionFailed = true;
+        callItDone();
+      });
+    }
+
+    // create rdp
+    if (!executionFailed) {
+      await fetch(url.origin + `/exec/rdp/${op}?broker=${pass.step2.currentBroker}`, {
+                                  method: "POST",
+                                  headers: {
+                                    accept: 'application/json;charset=UTF-8',
+                                    "Content-Type": "application/json"
+                                  },
+                                  body: JSON.stringify({
+                                    clientProfileName: pass.step2.currentClientProfile,
+                                    enabled: true,
+                                    restDeliveryPointName: pass.step3.rdpName,
+                                    service: pass.step3.serviceName,
+                                    vendor: pass.step3.vendorName
+                                  })})
+        .then(async (response) => {
+          if (response.status === 500) {
+            $(bucket + ' #exec-4-error').text(`${response.statusText}`)
+            $(bucket + ' #exec-4-error').removeClass('hidden');
+            executionFailed = true;
+            callItDone();
+          } else {
+            $(bucket + ' #exec-4-success').text(`REST Delivery Point ${op} successful`)
+            $(bucket + ' #exec-4-success').removeClass('hidden');
+            pass.objs.rdp = true;
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          $(bucket + ' #exec-4-error').text(`${error.toString()}`)
+          $(bucket + ' #exec-4-error').removeClass('hidden');
+          executionFailed = true;
+          callItDone();
+        });
+    }
+    // create rdp queue binding
+    if (!executionFailed) {
+      await fetch(url.origin + 
+          `/exec/rdpqueuebinding/${op}?broker=${pass.step2.currentBroker}&rdp=${pass.step3.rdpName}&queuebinding=${pass.step2.currentQueue}`, {
+            method: "POST",
+            headers: {
+              accept: 'application/json;charset=UTF-8',
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              postRequestTarget: pass.step4.requestTarget,
+              queueBindingName: pass.step2.currentQueue,                                  
+              restDeliveryPointName: pass.step3.rdpName
+            })})
+        .then(async (response) => {
+          if (response.status === 500) {
+            $(bucket + ' #exec-5-error').text(`${response.statusText}`)
+            $(bucket + ' #exec-5-error').removeClass('hidden');
+            executionFailed = true;
+            callItDone();
+          } else {
+            $(bucket + ' #exec-5-success').text(`RDP Queue Binding ${op} successful`)
+            $(bucket + ' #exec-5-success').removeClass('hidden');
+            pass.objs.rdpQueueBinding = true;
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          $(bucket + ' #exec-5-error').text(`${error.toString()}`)
+          $(bucket + ' #exec-5-error').removeClass('hidden');
+          executionFailed = true;
+          callItDone();
+        });
+    }
+
+    // create rdp rest consumer
+    if (!executionFailed) {
+      await fetch(url.origin + `/exec/rdprestconsumer/${op}?broker=${pass.step2.currentBroker}&rdp=${pass.step3.rdpName}`, {
+                                  method: "POST",
+                                  headers: {
+                                    accept: 'application/json;charset=UTF-8',
+                                    "Content-Type": "application/json"
+                                  },
+                                  body: JSON.stringify({
+                                    restConsumerName: pass.step4.consumerName,
+                                    restDeliveryPointName: pass.step3.rdpName,
+                                    enabled: true,
+                                    httpMethod: pass.step4.requestMethod.toLocaleLowerCase(),
+                                    remoteHost: pass.step4.remoteHost,
+                                    remotePort: parseInt(pass.step4.remotePort),
+                                    tlsEnabled: pass.step4.tlsEnabled,
+                                  })})
+        .then(async (response) => {
+          if (response.status === 500) {
+            $(bucket + ' #exec-6-error').text(`${response.statusText}`)
+            $(bucket + ' #exec-6-error').removeClass('hidden');
+            executionFailed = true;
+            callItDone();
+          } else {
+            $(bucket + ' #exec-6-success').text(`RDP REST Consumer ${op} successful`)
+            $(bucket + ' #exec-6-success').removeClass('hidden');
+            pass.objs.rdpRestConsumer = true;
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          $(bucket + ' #exec-6-error').text(`${error.toString()}`)
+          $(bucket + ' #exec-6-success').removeClass('hidden');
+          executionFailed = true;
+          callItDone();
+        });
+    }
+
+    if (executionFailed && op === 'create') {
+      // rollback
+      var count = 0;
+      const revertEl = $(bucket + ' #revert-changes');
+      revertEl.removeClass('hidden');
+      var msgs = ('<div>Reverting changes...<div>')
+      revertEl.html(msgs);
+      if (pass.step2.qMode === 'create' && pass.objs.queue) {
+        await fetch(url.origin + `/exec/queue/delete?broker=${pass.step2.currentBroker}&queue=${pass.step2.currentQueue}`, { method: "POST" });
+        msgs += ('<div class=" exec-status ml-2 font-normal text-gray-700 dark:text-gray-400">Queue deleted...<div>')
+          revertEl.html(msgs);
+        count++;
+      }
+      if (pass.step2.cpMode === 'create' && pass.objs.clientProfile) {
+        await fetch(url.origin + `/exec/clientprofile/delete?broker=${pass.step2.currentBroker}&clientprofile=${pass.step2.currentClientProfile}`, { method: "POST" });
+        msgs += ('<div class="exec-status ml-2 font-normal text-gray-700 dark:text-gray-400">Client Profile deleted...<div>')
+          revertEl.html(msgs);
+        count++;
+      }
+      if (pass.objs.rdp) {
+        await fetch(url.origin + `/exec/rdp/delete?broker=${pass.step2.currentBroker}&rdp=${pass.step3.rdpName}`, { method: "POST" });
+        msgs += ('<div class="exec-status ml-2 font-normal text-gray-700 dark:text-gray-400">REST Delivery Point deleted...<div>')
+        revertEl.html(msgs);
+        count++;
+      }
+      if (pass.objs.rdpQueueBinding) {
+        await fetch(url.origin + `/exec/rdpqueuebinding/delete?broker=${pass.step2.currentBroker}&queuebinding=${pass.step2.currentQueue}`, { method: "POST" });
+        msgs += ('<div class="exec-status ml-2 font-normal text-gray-700 dark:text-gray-400">RDP Queue Binding deleted...<div>')
+        revertEl.html(msgs);
+        count++;
+      }
+      if (pass.objs.rdpRestConsumer) {
+        await fetch(url.origin + `/exec/rdprestconsumer/delete?broker=${pass.step2.currentBroker}&rdp=${pass.step4.consumerName}`,
+                             { method: "POST" });
+        msgs += ('<div class="exec-status ml-2 font-normal text-gray-700 dark:text-gray-400">RDP REST Consumer deleted...<div>')
+        revertEl.html(msgs);
+        count++;
+      }
+
+      if (!count) {
+        msgs += ('<div class="exec-status ml-2 font-normal text-gray-700 dark:text-gray-400">Nothing to revert!<div>')
+        revertEl.html(msgs);
+      }
+    } else if (!executionFailed) {
+      if (op === 'create') {
+        var computedEndDate = computeEndDate(pass.step1.validFromDate, pass.step1.validFromTime, 
+                                              pass.step1.expireIn, pass.step1.expireInUnits);
+        var computedRetentionDate = computeRetentionDate(computedEndDate, pass.step1.retention, pass.step1.retentionUnits);
+        var newPass = {
+          name: pass.step1.passName,
+          url: (pass.step4.tlsEnabled ? 'https://' : 'http://') + pass.step4.remoteHost + ':' + pass.step4.remotePort + pass.step4.requestTarget,
+          subscriptions: pass.step3.subscriptions,
+          startDate: new Date(pass.step1.validFromDate + ' ' + pass.step1.validFromTime).toLocaleString(),
+          startTs: new Date(pass.step1.validFromDate + ' ' + pass.step1.validFromTime).getTime(),
+          endDate: computedEndDate.toLocaleString(),
+          endTs: computedEndDate.getTime(),
+          retentionDate: computedRetentionDate.toLocaleString(),
+          retentionTs: computedRetentionDate.getTime(),
+          passObject: JSON.stringify(pass, replacer),
+          valid: 1,
+          deactivated: 0,
+          subscribed: pass.step3.sMode === 'create' && pass.step3.subscriptions.length > 0 ? 1 : 0
+        }
+
+        await fetch('/passes', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(newPass)
+        })
+      } else {
+        await fetch(`/passes?pass=${pass.step1.passName}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+
+      }
+    }
+  }
+
+  function constructValidTime(val) {
+    var d = new Date(val);
+    d.setMinutes (d.getMinutes(), 0, 0);
+    return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+  }
+
+  function constructRevalidateFromTime(val) {
+    var d = new Date(val);
+    if (d.getMinutes())
+      d.setMinutes (d.getMinutes() + 120);
+    d.setMinutes (0, 0, 0);
+    return (`${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`);    
+  }
+
+
+  function buildValidFromTime(el) {
+    var d = new Date();
+    if (d.getMinutes())
+      d.setMinutes (d.getMinutes() + 60);
+    d.setMinutes (0, 0, 0);
+    el.setAttribute('value', 
+      `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`);    
+  }
+
+  function computeEndDate(fromDate, fromTime, expireIn, expireInUnits) {
+    var endDate = new Date(fromDate + ' ' + fromTime);
+    if (expireInUnits === 'Minutes') {
+      endDate.setMinutes(endDate.getMinutes() + parseInt(expireIn));
+    } else if (expireInUnits === 'Hours') {
+      endDate.setHours(endDate.getHours() + parseInt(expireIn));
+    } else if (expireInUnits === 'Days') {
+      endDate.setDate(endDate.getDate() + parseInt(expireIn));
+    } else if (expireInUnits === 'Weeks') {
+      endDate.setDate(endDate.getDate() + (parseInt(expireIn) * 7));
+    } else if (expireInUnits === 'Months') {
+      endDate.setMonth(endDate.getMonth() + parseInt(expireIn));
+    }
+    return endDate;
+  }
+
+  function computeRetentionDate(endDate, retention, retentionUnits) {
+    var retentionDate = new Date(endDate);
+    if (retentionUnits === 'Minutes') {
+      retentionDate.setMinutes(retentionDate.getMinutes() + parseInt(retention));
+    } else if (retentionUnits === 'Hours') {
+      retentionDate.setHours(retentionDate.getHours() + parseInt(retention));
+    } else if (retentionUnits === 'Days') {
+      retentionDate.setDate(retentionDate.getDate() + parseInt(retention));
+    } else if (retentionUnits === 'Weeks') {
+      retentionDate.setDate(retentionDate.getDate() + (parseInt(retention) * 7));
+    } else if (retentionUnits === 'Months') {
+      retentionDate.setMonth(retentionDate.getMonth() + parseInt(retention));
+    }
+
+    return retentionDate;
+  }
+
+  function startAtStep(step) {
+    currentStep = step;
+    var stepEls = document.querySelectorAll('.mstep');
+    stepEls.forEach((el, index) => {
+      if (index === step) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    });
+  }
+  startAtStep(0);
+  var stepEls = document.querySelectorAll('.mstep');
+  stepEls.forEach((el, index) => {
+    console.log(el.id, el.classList);
+  });
+});
+</script>
+  

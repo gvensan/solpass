@@ -1,0 +1,22 @@
+|active1|https://webhook.site:443/15fe109f-0872-45c0-be72-b13f9c0878d1|solace/>|7/27/2024, 10:00:00 AM|7/27/2024, 11:00:00 AM|1722054600000|1722058200000|7/27/2024, 12:00:00 PM|1722061800000|{"step1":{"passName":"active1","validFromDate":"2024-07-27","validFromTime":"10:00","expireIn":"1","expireInUnits":"Hours","retention":"1","retentionUnits":"Hours"},"step2":{"currentBroker":"Local Broker","cpMode":"create","currentClientProfile":"active1","qMode":"create","currentQueue":"active1","accessType":"Exclusive","respectTTL":true,"maxTTL":"0"},"step3":{"rdpName":"active1","serviceName":"","vendorName":"","sMode":"create","subscriptions":"solace/>"},"step4":{"consumerName":"active1","requestMethod":"POST","requestTarget":"/15fe109f-0872-45c0-be72-b13f9c0878d1","remoteHost":"webhook.site","remotePort":"443","tlsEnabled":true}}|2024-07-27T03:54:21.721Z|0|0|0|0|0|0|[]|0|1
+                id = 
+              name = active1
+               url = https://webhook.site:443/15fe109f-0872-45c0-be72-b13f9c0878d1
+     subscriptions = solace/>
+         startDate = 7/27/2024, 10:00:00 AM
+           endDate = 7/27/2024, 11:00:00 AM
+           startTs = 1722054600000
+             endTs = 1722058200000
+     retentionDate = 7/27/2024, 12:00:00 PM
+       retentionTs = 1722061800000
+        passObject = {"step1":{"passName":"active1","validFromDate":"2024-07-27","validFromTime":"10:00","expireIn":"1","expireInUnits":"Hours","retention":"1","retentionUnits":"Hours"},"step2":{"currentBroker":"Local Broker","cpMode":"create","currentClientProfile":"active1","qMode":"create","currentQueue":"active1","accessType":"Exclusive","respectTTL":true,"maxTTL":"0"},"step3":{"rdpName":"active1","serviceName":"","vendorName":"","sMode":"create","subscriptions":"solace/>"},"step4":{"consumerName":"active1","requestMethod":"POST","requestTarget":"/15fe109f-0872-45c0-be72-b13f9c0878d1","remoteHost":"webhook.site","remotePort":"443","tlsEnabled":true}}
+         createdOn = 2024-07-27T03:54:21.721Z
+        subscribed = 0
+         activated = 0
+  activationFailed = 0
+       deactivated = 0
+      deactivating = 0
+deactivationFailed = 0
+            errors = []
+           expired = 0
+             valid = 1

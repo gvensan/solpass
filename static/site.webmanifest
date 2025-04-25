@@ -1,0 +1,7 @@
+{
+    "name": "SolPass",
+    "short_name": "SolPass",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

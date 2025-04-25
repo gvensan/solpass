@@ -1,0 +1,470 @@
+<!---
+title: Brokers
+description: Registered Brokers
+layout: dashboard
+group: solpass
+--->
+
+<div class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
+  <div class="w-full mb-1">
+      <div class="mb-4">
+          <nav class="flex mb-5" aria-label="Breadcrumb">
+              <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                <li class="inline-flex items-center">
+                  <a href="/" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
+                    <svg class="w-5 h-5 mr-2.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <div class="flex items-center">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                    <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" aria-current="page">Brokers</span>
+                  </div>
+                </li>
+              </ol>
+          </nav>
+      </div>
+      <div class="items-center block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700 justify-between">
+          <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">All brokers</h1>
+          <div class="flex items-center p-4 space-x-2 whitespace-nowrap justify-end">
+            <div id="tooltip-refresh-brokers" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                Refresh Brokers
+                <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+            <button id="refreshBrokerButton" data-tooltip-target="tooltip-refresh-brokers" data-tooltip-placement="top" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-3 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" type="button">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path style="fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke:#fff;stroke-opacity:1;stroke-miterlimit:4;" d="M 17.653125 7.65 C 15.923437 5.404687 13.03125 4.396875 10.279687 5.08125 C 7.532812 5.760937 5.446875 8.00625 4.96875 10.8 M 18 3.998437 L 18 8.001563 L 14.001563 8.001563 M 6.346875 16.35 C 8.076562 18.595312 10.96875 19.603125 13.720313 18.923437 C 16.467187 18.239062 18.553125 15.99375 19.03125 13.2 M 6 20.001562 L 6 15.998437 L 9.998437 15.998437 " transform="matrix(0.833333,0,0,0.833333,0,0)"/>
+              </svg>
+            </button>
+            <div id="tooltip-create-broker" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                New Broker
+                <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+            <button id="createBrokerButton" data-tooltip-target="tooltip-create-broker" data-tooltip-placement="top" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-3 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800" type="button" data-drawer-target="drawer-create-default" data-drawer-show="drawer-create-default" aria-controls="drawer-create-default" data-drawer-placement="right">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20">
+                <g id="surface1">
+                  <path style=" stroke:none;fill-rule:nonzero;fill:#ffffff;fill-opacity:1;" d="M 20 10 C 20 15.523438 15.523438 20 10 20 C 4.476562 20 0 15.523438 0 10 C 0 4.476562 4.476562 0 10 0 C 15.523438 0 20 4.476562 20 10 Z M 20 10 "/>
+                  <path style=" stroke:none;fill-rule:nonzero;fill:#6b7280;fill-opacity:1;" d="M 17.34375 8.5 C 17.34375 8.4375 17.339844 8.375 17.324219 8.3125 C 17.300781 8.195312 17.253906 8.082031 17.1875 7.980469 C 17.152344 7.929688 17.113281 7.882812 17.070312 7.839844 C 16.90625 7.667969 16.667969 7.5625 16.40625 7.5625 L 14.316406 7.5625 L 14.316406 6.214844 C 14.371094 6.199219 14.425781 6.179688 14.476562 6.152344 C 14.683594 6.054688 14.851562 5.890625 14.957031 5.691406 C 15.011719 5.589844 15.050781 5.484375 15.070312 5.367188 C 15.082031 5.308594 15.082031 5.25 15.082031 5.1875 C 15.082031 4.816406 14.894531 4.484375 14.609375 4.292969 C 14.4375 4.179688 14.226562 4.109375 14.003906 4.109375 C 13.855469 4.109375 13.714844 4.140625 13.585938 4.195312 C 13.195312 4.359375 12.929688 4.746094 12.929688 5.191406 C 12.929688 5.3125 12.945312 5.429688 12.984375 5.539062 C 13.023438 5.648438 13.078125 5.746094 13.148438 5.839844 C 13.25 5.972656 13.382812 6.082031 13.535156 6.160156 C 13.585938 6.183594 13.640625 6.207031 13.695312 6.222656 L 13.695312 7.570312 L 10.3125 7.570312 L 10.3125 4.46875 C 10.425781 4.4375 10.527344 4.386719 10.621094 4.320312 C 10.898438 4.125 11.082031 3.804688 11.082031 3.4375 C 11.082031 2.839844 10.601562 2.359375 10.003906 2.359375 C 9.929688 2.359375 9.855469 2.367188 9.785156 2.378906 C 9.574219 2.425781 9.386719 2.527344 9.238281 2.675781 C 9.042969 2.871094 8.921875 3.140625 8.921875 3.4375 C 8.921875 3.621094 8.964844 3.792969 9.046875 3.945312 C 9.101562 4.042969 9.167969 4.136719 9.25 4.214844 C 9.371094 4.332031 9.523438 4.417969 9.6875 4.46875 L 9.6875 7.570312 L 6.304688 7.570312 L 6.304688 6.222656 C 6.417969 6.1875 6.519531 6.140625 6.613281 6.070312 C 6.707031 6.007812 6.789062 5.929688 6.859375 5.839844 C 6.929688 5.75 6.980469 5.648438 7.019531 5.539062 C 7.058594 5.429688 7.078125 5.3125 7.078125 5.191406 C 7.078125 5.042969 7.046875 4.898438 6.992188 4.773438 C 6.9375 4.640625 6.859375 4.527344 6.761719 4.429688 C 6.664062 4.332031 6.546875 4.25 6.417969 4.195312 C 6.285156 4.140625 6.144531 4.109375 5.996094 4.109375 C 5.851562 4.109375 5.707031 4.140625 5.578125 4.195312 C 5.515625 4.226562 5.453125 4.257812 5.394531 4.296875 C 5.28125 4.375 5.179688 4.476562 5.101562 4.589844 C 4.984375 4.761719 4.917969 4.96875 4.917969 5.191406 C 4.917969 5.253906 4.925781 5.3125 4.933594 5.371094 C 4.953125 5.484375 4.992188 5.59375 5.042969 5.695312 C 5.152344 5.894531 5.320312 6.054688 5.523438 6.15625 C 5.574219 6.179688 5.628906 6.203125 5.6875 6.21875 L 5.6875 7.566406 L 3.597656 7.566406 C 3.285156 7.566406 2.996094 7.726562 2.824219 7.976562 C 2.722656 8.125 2.660156 8.304688 2.660156 8.503906 L 2.660156 11.527344 C 2.660156 11.714844 2.71875 11.894531 2.820312 12.042969 C 2.984375 12.292969 3.269531 12.464844 3.601562 12.464844 L 5.6875 12.464844 L 5.6875 13.785156 C 5.632812 13.804688 5.582031 13.824219 5.527344 13.851562 C 5.320312 13.949219 5.152344 14.109375 5.046875 14.3125 C 4.996094 14.410156 4.957031 14.519531 4.9375 14.636719 C 4.925781 14.695312 4.921875 14.753906 4.921875 14.8125 C 4.921875 15.039062 4.988281 15.246094 5.105469 15.417969 C 5.183594 15.53125 5.285156 15.628906 5.398438 15.707031 C 5.457031 15.746094 5.515625 15.78125 5.582031 15.808594 C 5.710938 15.863281 5.851562 15.894531 6 15.894531 C 6.148438 15.894531 6.292969 15.863281 6.417969 15.808594 C 6.550781 15.753906 6.664062 15.675781 6.765625 15.578125 C 6.859375 15.480469 6.941406 15.363281 6.996094 15.234375 C 7.050781 15.101562 7.082031 14.960938 7.082031 14.8125 C 7.082031 14.691406 7.0625 14.574219 7.023438 14.464844 C 6.984375 14.359375 6.929688 14.257812 6.859375 14.167969 C 6.792969 14.078125 6.710938 13.996094 6.617188 13.933594 C 6.523438 13.871094 6.417969 13.816406 6.308594 13.785156 L 6.308594 12.460938 L 9.691406 12.460938 L 9.691406 15.535156 C 9.523438 15.585938 9.375 15.675781 9.253906 15.792969 C 9.171875 15.871094 9.101562 15.960938 9.050781 16.0625 C 8.96875 16.210938 8.925781 16.382812 8.925781 16.566406 C 8.925781 16.863281 9.046875 17.136719 9.242188 17.332031 C 9.390625 17.476562 9.578125 17.582031 9.789062 17.625 C 9.859375 17.640625 9.933594 17.648438 10.003906 17.648438 C 10.601562 17.648438 11.085938 17.164062 11.085938 16.566406 C 11.085938 16.199219 10.902344 15.878906 10.625 15.6875 C 10.535156 15.621094 10.429688 15.570312 10.316406 15.535156 L 10.316406 12.460938 L 13.699219 12.460938 L 13.699219 13.785156 C 13.644531 13.800781 13.589844 13.820312 13.539062 13.847656 C 13.386719 13.921875 13.25 14.03125 13.148438 14.167969 C 13.082031 14.253906 13.027344 14.359375 12.988281 14.464844 C 12.953125 14.574219 12.929688 14.691406 12.929688 14.8125 C 12.929688 15.261719 13.203125 15.644531 13.589844 15.808594 C 13.71875 15.863281 13.859375 15.894531 14.007812 15.894531 C 14.234375 15.894531 14.4375 15.828125 14.609375 15.710938 C 14.898438 15.515625 15.085938 15.1875 15.085938 14.816406 C 15.085938 14.753906 15.082031 14.695312 15.070312 14.640625 C 15.054688 14.523438 15.015625 14.414062 14.960938 14.3125 C 14.851562 14.113281 14.683594 13.953125 14.480469 13.851562 C 14.429688 13.828125 14.375 13.804688 14.320312 13.789062 L 14.320312 12.464844 L 16.410156 12.464844 C 16.671875 12.464844 16.910156 12.359375 17.082031 12.1875 C 17.167969 12.101562 17.234375 12.003906 17.285156 11.890625 C 17.328125 11.78125 17.351562 11.660156 17.34375 11.535156 Z M 17.34375 8.5 "/>
+                  </g></svg>
+            </button>   
+          </div>        
+      </div>
+  </div>
+</div>
+<div class="flex flex-col">
+  <div class="overflow-x-auto">
+      <div class="inline-block min-w-full align-middle">
+          <div class="overflow-hidden shadow">
+            <table class="min-w-full divide-y divide-gray-200 table-auto dark:divide-gray-600">
+              <thead class="bg-gray-100 dark:bg-gray-700">
+                  <tr>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                        Broker Name
+                      </th>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                        Status
+                      </th>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                        SEMP Config
+                      </th>
+                      <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
+                        Actions
+                      </th>
+                  </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                  <% for (let i = 0; i < brokers.length; i++) { %>
+                      <% const broker = brokers[i]; %>
+
+                  <tr class="hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <td class="p-4 break-words text-base font-medium text-gray-900 whitespace-nowrap dark:text-white"><%= broker.name %></td>
+                      <td class="p-4 text-sm font-normal text-gray-500 whitespace-nowrap dark:text-gray-400">
+                        <div class="inline-flex justify-center text-base font-semibold text-gray-900 dark:text-white">
+                          <% if (broker.status) { %>
+                            <div class="self-center h-2.5 w-2.5 rounded-full bg-green-400 mr-2"></div>
+                          <% } else { %>
+                            <div class="self-center h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
+                          <% } %>
+                          <div class="text-sm font-normal text-gray-500 dark:text-gray-400"><%= new Date(broker.lastTested).toLocaleString() %></div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="flex flex-col">
+                          <div class="p-1 break-words text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Message VPN: </span><%= broker.vpn %>
+                          </div>
+                          <div class="p-1 break-words text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">URL: </span><%= broker.url %>
+                          </div>
+                          <div class="p-1 break-words text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Username: </span><%= broker.user %>
+                          </div>
+                          <div class="p-1 break-words text-base font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">Password: </span><%= "*********" %>
+                          </div>
+                        </div>                        
+                      </td>
+                      <td class="p-4 space-x-2 whitespace-nowrap">
+                          <div id="tooltip-test-broker-<%= i %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                            Test Connection
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                          </div>
+                          <button data-tooltip-target="tooltip-test-broker-<%= i %>" data-tooltip-placement="top" type="button" data-broker="<%= JSON.stringify(broker) %>" data-drawer-target="drawer-test-default" data-drawer-show="drawer-test-default" aria-controls="drawer-create-default" data-drawer-placement="right" class="testBrokerButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                              <path style=" stroke:none;fill-rule:nonzero;fill-opacity:1;" d="M 8.289062 17.695312 L 7.683594 17.089844 C 6.777344 17.988281 6 18.285156 5.304688 18.285156 C 4.910156 18.285156 4.519531 18.1875 4.117188 17.988281 C 3.714844 17.789062 3.304688 17.484375 2.90625 17.085938 C 2.507812 16.6875 2.203125 16.277344 2.003906 15.875 C 1.804688 15.472656 1.707031 15.082031 1.707031 14.6875 C 1.710938 13.992188 2.007812 13.210938 2.902344 12.308594 C 5.039062 10.171875 5.464844 9.746094 5.46875 9.742188 L 4.863281 9.136719 L 4.257812 9.742188 L 10.246094 15.730469 L 10.851562 15.125 L 10.246094 14.519531 C 10.242188 14.523438 9.820312 14.945312 7.679688 17.085938 L 8.894531 18.300781 C 11.03125 16.164062 11.457031 15.738281 11.460938 15.734375 L 12.066406 15.128906 L 4.867188 7.933594 L 4.261719 8.539062 C 4.257812 8.542969 3.835938 8.964844 1.695312 11.105469 C 0.574219 12.222656 -0.00390625 13.460938 0 14.695312 C 0 15.378906 0.175781 16.039062 0.472656 16.640625 C 0.773438 17.246094 1.191406 17.796875 1.695312 18.300781 C 2.199219 18.804688 2.75 19.226562 3.355469 19.523438 C 3.957031 19.824219 4.617188 20 5.300781 19.996094 C 6.535156 20 7.777344 19.421875 8.890625 18.296875 Z M 11.710938 2.304688 L 12.316406 2.910156 C 13.222656 2.011719 14 1.714844 14.695312 1.714844 C 15.089844 1.714844 15.480469 1.8125 15.882812 2.011719 C 16.285156 2.210938 16.695312 2.515625 17.09375 2.914062 C 17.492188 3.3125 17.796875 3.722656 17.996094 4.125 C 18.195312 4.527344 18.292969 4.917969 18.292969 5.3125 C 18.289062 6.007812 17.992188 6.789062 17.097656 7.695312 C 16.027344 8.765625 15.386719 9.40625 15.011719 9.78125 C 14.636719 10.15625 14.53125 10.261719 14.53125 10.261719 L 15.136719 10.867188 L 15.742188 10.261719 L 9.75 4.265625 L 9.144531 4.871094 L 9.75 5.476562 C 9.75 5.476562 10.179688 5.046875 12.316406 2.910156 L 11.105469 1.699219 C 10.035156 2.769531 9.394531 3.410156 9.019531 3.785156 C 8.644531 4.160156 8.539062 4.265625 8.539062 4.265625 L 7.933594 4.871094 L 15.128906 12.066406 L 15.734375 11.464844 C 15.734375 11.464844 16.164062 11.035156 18.300781 8.898438 C 19.421875 7.78125 20 6.542969 20 5.308594 C 20 4.625 19.824219 3.964844 19.527344 3.363281 C 19.226562 2.757812 18.808594 2.207031 18.304688 1.703125 C 17.800781 1.199219 17.25 0.777344 16.644531 0.480469 C 16.039062 0.175781 15.378906 0 14.695312 0 C 13.460938 -0.00390625 12.21875 0.574219 11.105469 1.699219 Z M 9.144531 8.289062 L 8.539062 7.683594 L 6.402344 9.820312 L 7.613281 11.03125 L 9.75 8.894531 L 8.539062 7.683594 L 9.144531 8.289062 L 8.539062 7.683594 L 6.402344 9.820312 L 7.613281 11.03125 L 9.75 8.894531 L 8.539062 7.683594 Z M 11.710938 10.855469 L 11.105469 10.25 L 8.96875 12.386719 L 10.179688 13.597656 L 12.316406 11.460938 L 11.105469 10.25 L 11.710938 10.855469 L 11.105469 10.25 L 8.96875 12.386719 L 10.179688 13.597656 L 12.316406 11.460938 L 11.105469 10.25 Z M 11.710938 10.855469 "/>
+                            </svg>
+                              <!-- Test -->
+                          </button>
+
+                          <div id="tooltip-update-broker-<%= i %>"  role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                            Update Broker
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                          </div>
+                          <button data-tooltip-target="tooltip-update-broker-<%= i %>" data-tooltip-placement="top" type="button" data-broker="<%= JSON.stringify(broker) %>" data-drawer-target="drawer-update-default" data-drawer-show="drawer-create-default" aria-controls="drawer-create-default" data-drawer-placement="right" class="updateBrokerButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                              <!-- Update -->
+                          </button>
+                          <div id="tooltip-remove-broker-<%= i %>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                            Remove Broker
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                          </div>
+                          <button data-tooltip-target="tooltip-remove-broker-<%= i %>" data-tooltip-placement="top" type="button" data-broker="<%= JSON.stringify(broker) %>" data-drawer-target="drawer-remove-default" data-drawer-show="drawer-remove-default" aria-controls="drawer-remove-default" data-drawer-placement="right" class="removeBrokerButton inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20px" height="20px" viewBox="0 0 20 20" version="1.1">
+                              <path style=" stroke:#fff;fill-rule:nonzero;fill:#fff;fill-opacity:1;" d="M 0 10 C 0 11.359375 0.265625 12.652344 0.800781 13.878906 C 1.332031 15.105469 2.039062 16.171875 2.921875 17.078125 C 3.800781 17.988281 4.867188 18.699219 6.121094 19.21875 C 7.375 19.738281 8.667969 20 10 20 C 11.332031 20 12.625 19.738281 13.878906 19.21875 C 15.132812 18.699219 16.199219 17.988281 17.078125 17.078125 C 17.960938 16.171875 18.667969 15.105469 19.199219 13.878906 C 19.734375 12.652344 20 11.359375 20 10 C 20 8.640625 19.734375 7.347656 19.199219 6.121094 C 18.667969 4.894531 17.960938 3.828125 17.078125 2.921875 C 16.199219 2.011719 15.140625 1.308594 13.898438 0.800781 C 12.660156 0.292969 11.359375 0.0273438 10 0 C 8.640625 0 7.347656 0.265625 6.121094 0.800781 C 4.894531 1.332031 3.828125 2.039062 2.921875 2.921875 C 2.011719 3.800781 1.308594 4.867188 0.800781 6.121094 C 0.292969 7.375 0.0273438 8.667969 0 10 Z M 2.5 10 C 2.5 8.640625 2.832031 7.386719 3.5 6.238281 C 4.167969 5.09375 5.078125 4.1875 6.238281 3.519531 C 7.398438 2.851562 8.652344 2.511719 10 2.5 C 11.347656 2.488281 12.601562 2.828125 13.761719 3.519531 C 14.921875 4.214844 15.832031 5.121094 16.5 6.238281 C 17.167969 7.359375 17.5 8.613281 17.5 10 C 17.5 11.386719 17.167969 12.648438 16.5 13.78125 C 15.832031 14.914062 14.921875 15.820312 13.761719 16.5 C 12.601562 17.179688 11.347656 17.511719 10 17.5 C 8.652344 17.488281 7.398438 17.152344 6.238281 16.5 C 5.078125 15.847656 4.167969 14.941406 3.5 13.78125 C 2.832031 12.621094 2.5 11.359375 2.5 10 Z M 6.101562 12.660156 C 6.101562 13.007812 6.21875 13.300781 6.460938 13.539062 C 6.699219 13.78125 7 13.90625 7.359375 13.921875 C 7.71875 13.933594 8.011719 13.808594 8.238281 13.539062 L 10 11.78125 L 11.761719 13.539062 C 12 13.792969 12.292969 13.921875 12.640625 13.921875 C 12.988281 13.921875 13.285156 13.792969 13.539062 13.539062 C 13.792969 13.285156 13.914062 12.992188 13.898438 12.660156 C 13.886719 12.328125 13.765625 12.035156 13.539062 11.78125 L 11.761719 10 L 13.539062 8.238281 C 13.78125 8 13.898438 7.707031 13.898438 7.359375 C 13.898438 7.011719 13.78125 6.71875 13.539062 6.480469 C 13.300781 6.238281 13 6.113281 12.640625 6.101562 C 12.28125 6.085938 11.988281 6.214844 11.761719 6.480469 L 10 8.238281 L 8.238281 6.480469 C 8 6.226562 7.707031 6.101562 7.359375 6.101562 C 7.011719 6.101562 6.714844 6.226562 6.460938 6.480469 C 6.207031 6.734375 6.085938 7.027344 6.101562 7.359375 C 6.113281 7.691406 6.234375 7.988281 6.460938 8.238281 L 8.238281 10 L 6.460938 11.78125 C 6.21875 12.019531 6.101562 12.3125 6.101562 12.660156 Z M 6.101562 12.660156 "/>
+                            </svg>
+                              
+                            <!-- Remove -->
+                          </button>
+                      </td>
+                  </tr>
+
+                  <% } %>
+              </tbody>
+          </table>
+    </div>
+      </div>
+  </div>
+</div>
+
+<!-- Edit Broker Drawer -->
+<div id="drawer-update-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-xs p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-label" class="inline-flex items-center mb-6 text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Update Broker</h5>
+  <button id="broker-close" type="button" data-drawer-dismiss="drawer-create-default" aria-controls="drawer-create-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+</div>
+
+
+<!-- Delete Broker Drawer -->
+<div id="drawer-remove-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-label" class="inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Delete Broker</h5>
+  <button type="button" data-drawer-dismiss="drawer-remove-default" aria-controls="drawer-remove-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+  <svg class="w-10 h-10 mt-8 mb-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+  <h3 class="mb-6 text-lg text-gray-500 dark:text-gray-400">Are you sure you want to remove this broker?</h3>
+  <div id="remove-broker-data" class="hidden"></div>
+  <button id="brokerDeleteButton" type="submit" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2.5 text-center mr-2 dark:focus:ring-red-900">
+      Yes, I'm sure
+  </button>
+  <a href="#" class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 border border-gray-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2.5 text-center dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700" data-drawer-hide="drawer-remove-default">
+      No, cancel
+  </a>
+</div>
+
+<!-- Test Broker Drawer -->
+<div id="drawer-test-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-test-broker-label" class="inline-flex items-center mb-6 text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">Test Broker</h5>
+  <button id="drawer-test-default-close" type="button" data-drawer-dismiss="drawer-test-default" aria-controls="drawer-test-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+    <span class="sr-only">Close menu</span>
+  </button>
+  <div class="space-y-10">
+    <h3 class="mb-6 text-lg text-gray-500 dark:text-gray-400">Testing...</h3>
+    <div id="test-result" class="mt-2 text-sm"></div>
+  </div>
+</div>
+
+<!-- Add Broker Drawer -->
+<div id="drawer-create-default" class="fixed top-0 right-0 z-40 w-full h-screen max-w-lg p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800" tabindex="-1" aria-labelledby="drawer-label" aria-hidden="true">
+  <h5 id="drawer-create-broker-label" class="inline-flex items-center mb-6 text-sm font-semibold text-gray-500 uppercase dark:text-gray-400">New Broker</h5>
+  <button id="drawer-create-default-close" type="button" data-drawer-dismiss="drawer-create-default" aria-controls="drawer-create-default" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+      <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+      <span class="sr-only">Close menu</span>
+  </button>
+  <form id="newBrokerForm" class="... group" novalidate>
+    <input type="text" name="id" id="id" class="hidden" />
+    <div class="space-y-10">
+        <div>
+          <label for="name" class="mb-5">
+            <span>Name</span>
+            <input type="text" name="name" id="name"
+              class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Friendly name" required="" 
+            />
+          </label>
+        </div>
+
+        <div>
+          <label for="vpn" class="mb-5">
+            <span>Message VPN</span>
+            <input type="text" name="vpn" id="vpn"
+              class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="Message VPN name" required="" 
+            />
+          </label>
+        </div>
+
+        <div>
+          <label for="url" class="mb-5">
+            <span>SEMP Config URL</span>
+            <textarea name="url" id="url" rows="4" class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="SEMP Config url" required=""></textarea>
+          </label>
+        </div>
+        <div>
+          <label for="user" class="mb-5">
+            <span>SEMP Username</span>
+            <input type="text" name="user" id="user" 
+              class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="SEMP Username" required="" 
+            />
+          </label>
+        </div>
+        <div>
+          <label for="pass" class="mb-5">
+            <span>SEMP Password</span>
+            <input type="text" name="pass" id="pass" 
+              class="peer border-2 border-muted-medium py-4 px-4 rounded-xl placeholder:text-default focus:border-primary focus:ring-1 focus:ring-primary outline-none w-full [.validated_&]:invalid:border-pink-600 [.validated_&]:invalid:ring-2 [.validated_&]:invalid:ring-pink-200" placeholder="SEMP Password" required="" 
+            />
+          </label>
+        </div>
+        <div id="broker-result" class="mt-2 text-sm"></div>
+            
+
+        <div class="bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute">
+            <button id="broker-submit" type="submit" class="text-white w-full justify-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" >
+                Submit
+            </button>
+            <button id="broker-cancel" type="button" data-drawer-dismiss="drawer-create-default" aria-controls="drawer-create-default" class="inline-flex w-full justify-center text-gray-500 items-center bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                <svg aria-hidden="true" class="w-5 h-5 -ml-1 sm:mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                Cancel
+            </button>
+        </div>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+<script>
+  console.log('Started...');
+  
+  function showError(elName, message) {
+    console.log(message);
+    const result = document.getElementById(elName);
+    result.classList.remove("text-green-500");
+    result.classList.add("text-red-500");
+    result.innerText = message;
+  }
+  
+  function showResult(elName, message) {
+    const result = document.getElementById(elName);
+    result.classList.add("text-green-500");
+    result.classList.remove("text-red-500");
+    result.innerText = message;
+  }
+  
+  function resetResult(elName) {
+    const result = document.getElementById(elName);
+    result.classList.remove("text-green-500");
+    result.classList.remove("text-red-500");
+  
+    result.innerText = "";
+  }
+  
+  const newBrokerForm = document.getElementById("newBrokerForm");  
+  newBrokerForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    newBrokerForm.classList.add("validated");
+    if (!newBrokerForm.checkValidity()) {
+      newBrokerForm.querySelectorAll(":invalid")[0].focus();
+      return;
+    }
+  
+    const result = document.getElementById("result");
+    const formData = new FormData(newBrokerForm);
+    const broker = Object.fromEntries(formData);
+    const update = broker.id ? true : false;
+    if (!update) broker.id = hashCode(broker.name);
+    const json = JSON.stringify(broker);
+  
+    const urlRegex = /^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|localhost|((\d{1,3}\.){3}\d{1,3}))(:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i;
+    console.log(broker);
+    console.log(urlRegex.test(broker.url));
+    if (!urlRegex.test(broker.url)) {
+      showError("broker-result", "Invalid URL");
+      return;
+    } else {
+      showResult("broker-result", "Validating...")
+    }
+  
+    const path = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+    const response = await fetch(path + `/brokers`, {
+      method: update ? "PUT" : "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: json
+    })
+
+    console.log(response)
+    if (response.status === 200) {
+      setTimeout(() => {
+        newBrokerForm.classList.remove("validated");
+        newBrokerForm.reset();
+        document.getElementById('drawer-create-default-close').click()
+        resetResult("broker-result");
+        document.getElementById("refreshBrokerButton").click();
+      }, 1500);
+      showResult('broker-result', 'Successfully added broker!');
+    } else {
+      toastr.error(response.statusText)
+      setTimeout(() => {
+        newBrokerForm.classList.remove("validated");
+        newBrokerForm.reset();
+        document.getElementById('drawer-create-default-close').click()
+        resetResult("broker-result");
+        document.getElementById("refreshBrokerButton").click();
+      }, 1500);
+      showError('broker-result', response.statusText);
+    }
+  });
+  
+  const createBroker = document.getElementById("createBrokerButton");
+  createBroker.addEventListener("click", function (e) {
+    newBrokerForm.reset();
+    document.getElementById('drawer-create-broker-label').innerText = "New Broker";
+  });
+  
+  
+  const testBrokers = document.getElementsByClassName("testBrokerButton");
+  Array.from(testBrokers).forEach(element => {
+    element.addEventListener("click", async function (e) {
+      resetResult('test-result');
+      const brokerStr = e.currentTarget.dataset.broker;
+      var broker = JSON.parse(brokerStr)
+      const path = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+      try {
+        const response = await fetch(path + `/brokers/test?broker=${broker.name}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      
+        console.log(response)
+        if (response.status === 200) {
+          setTimeout(() => {
+            document.getElementById('drawer-test-default-close').click()
+            document.getElementById("refreshBrokerButton").click();
+            resetResult('test-result');
+          }, 1500);
+          showResult('test-result', 'Broker connection test successful!');
+        } else {
+          toastr.error(response.statusText)
+          setTimeout(() => {
+            document.getElementById('drawer-test-default-close').click()
+            document.getElementById("refreshBrokerButton").click();
+            resetResult('test-result');
+          }, 1500);
+          showError('test-result', response.statusText);
+        }
+      } catch (error) {
+        setTimeout(() => {
+          document.getElementById('drawer-test-default-close').click()
+          document.getElementById("refreshBrokerButton").click();
+          resetResult('test-result');
+        }, 1500);
+        showError('test-result', error);
+      }
+
+
+    });
+  });
+
+  const removeBrokers = document.getElementsByClassName("removeBrokerButton");
+  Array.from(removeBrokers).forEach(element => {
+    element.addEventListener("click", function (e) {
+      const brokerStr = e.currentTarget.dataset.broker;
+      var broker = JSON.parse(brokerStr)
+      document.getElementById('remove-broker-data').innerText = brokerStr;
+    });
+  });
+
+  const brokerDeleteButton = document.getElementById("brokerDeleteButton");
+  brokerDeleteButton.addEventListener("click", async function (e) {
+    const brokerStr = document.getElementById("remove-broker-data").innerText;
+    const broker = JSON.parse(brokerStr);
+    const path = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+    const response = await fetch(path + `/brokers?broker=${broker.name}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.status !== 200) {
+      toastr.error(response.statusText)
+    } else {
+      toastr.success('Broker successfully removed')
+    }
+
+    document.getElementById("refreshBrokerButton").click();
+  });
+
+  const refreshBrokers = document.getElementById("refreshBrokerButton");
+  refreshBrokers.addEventListener("click", async function (e) {
+    window.location.reload();
+  });
+  const editBrokers = document.getElementsByClassName("updateBrokerButton");
+  Array.from(editBrokers).forEach(element => {
+    element.addEventListener("click", function (e) {
+      const brokerStr = e.currentTarget.dataset.broker;
+      var broker = JSON.parse(brokerStr)
+      console.log(broker);
+      document.getElementById('drawer-create-broker-label').innerText = "Update Broker";
+      newBrokerForm.querySelector("#id").value = broker.id;
+      newBrokerForm.querySelector("#name").value = broker.name;
+      newBrokerForm.querySelector("#url").value = broker.url;
+      newBrokerForm.querySelector("#vpn").value = broker.vpn;
+      newBrokerForm.querySelector("#user").value = broker.user;
+      newBrokerForm.querySelector("#pass").value = broker.pass;
+    });
+  });
+
+  const cancelButton = document.getElementById("broker-cancel");
+  cancelButton.addEventListener("click", function (e) {
+    newBrokerForm.reset();
+    document.getElementById('drawer-create-broker-label').innerText = "New Broker";
+  });
+
+  const closeButton = document.getElementById("broker-close");
+  closeButton.addEventListener("click", function (e) {
+    newBrokerForm.reset();
+    document.getElementById('drawer-create-broker-label').innerText = "New Broker";
+  });
+
+  const hashCode = (str) => {
+    var hash = 0,
+    i, chr;
+    if (str.length === 0) return hash;
+    for (i = 0; i < str.length; i++) {
+      chr = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  };
+
+  </script>
